@@ -1,9 +1,30 @@
 @import "@fontsource/inter";
 @import "@fontsource/orbitron";
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --font-inter: 'Inter', sans-serif;
+  --font-orbitron: 'Orbitron', sans-serif;
+  
+  --animate-fadeIn: fadeIn 0.6s ease-out forwards;
+  --animate-slideUp: slideUp 0.7s ease-out forwards;
+  --animate-glowPulse: glowPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(34, 211, 238, 0.6); }
+  50% { box-shadow: 0 0 32px rgba(59, 130, 246, 0.9); }
+}
 
 /* Global HTML reset + responsive type */
 html {
