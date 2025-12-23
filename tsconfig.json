@@ -31,5 +31,11 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "src/components/glasscard.tsx",
+    "src/components/reveal.tsx",
+    "src/components/sectionheader.tsx",
+    "src/components/themeprovider.tsx"
+  ]
 }

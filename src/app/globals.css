@@ -5,29 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Starry cosmic background */
+/* Global HTML reset + responsive type */
 html {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-}
-
-body {
-  background-image: url("https://raw.githubusercontent.com/ajaysidal/starry-assets/main/starfield.svg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  background-color: #000000;
-  min-height: 100vh;
-  position: relative;
-  margin: 0;
-  padding: 0;
-}
-
-/* Responsive typography */
-html {
   font-size: 16px;
 }
 
@@ -40,5 +23,35 @@ html {
 @media (max-width: 480px) {
   html {
     font-size: 14px;
+  }
+}
+
+/* Body background */
+body {
+  background-image: url("https://raw.githubusercontent.com/ajaysidal/starry-assets/main/starfield.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-color: #000000;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Default typography */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  /* Smooth transitions for theme changes */
+  *, *::before, *::after {
+    transition-property: color, background-color, border-color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
   }
 }
