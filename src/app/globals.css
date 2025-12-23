@@ -5,13 +5,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Starry background */
+/* Starry cosmic background */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-image: url("https://raw.githubusercontent.com/ajaysidal/starry-assets/main/starfield.svg");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
+  background-color: #000000;
+}
+
+/* Ensure body has proper min-height for fixed layouts */
+body {
+  min-height: 100vh;
+  position: relative;
 }
 
 /* Responsive typography */

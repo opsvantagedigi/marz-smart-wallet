@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className="bg-gradient-to-br from-[#001F3F] via-[#007F7F] to-[#FFD700] font-sans text-white dark:text-white dark:bg-black min-h-screen"
+        className="font-sans text-white min-h-screen"
         style={{
           fontFamily: "Inter, Orbitron, sans-serif",
         }}
