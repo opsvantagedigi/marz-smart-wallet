@@ -8,7 +8,12 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        orbitron: ["Orbitron", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+      },
+    }
   },
   plugins: []
 };

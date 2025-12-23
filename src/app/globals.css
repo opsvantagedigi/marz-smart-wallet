@@ -1,3 +1,6 @@
+@import url("@fontsource/inter");
+@import url("@fontsource/orbitron");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
