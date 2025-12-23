@@ -1,5 +1,5 @@
-@import url("@fontsource/inter");
-@import url("@fontsource/orbitron");
+@import "@fontsource/inter";
+@import "@fontsource/orbitron";
 
 @tailwind base;
 @tailwind components;
