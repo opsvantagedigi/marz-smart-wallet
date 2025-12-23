@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body
         suppressHydrationWarning
-        className="font-sans text-white min-h-screen"
+        className="text-white"
         style={{
           fontFamily: "Inter, Orbitron, sans-serif",
         }}

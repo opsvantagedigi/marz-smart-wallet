@@ -6,8 +6,7 @@
 @tailwind utilities;
 
 /* Starry cosmic background */
-html,
-body {
+html {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -21,12 +20,10 @@ body {
   background-attachment: fixed;
   background-position: center;
   background-color: #000000;
-}
-
-/* Ensure body has proper min-height for fixed layouts */
-body {
   min-height: 100vh;
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 /* Responsive typography */
