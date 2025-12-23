@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 /* Starry background */
 body {
   background-image: url("https://raw.githubusercontent.com/ajaysidal/starry-assets/main/starfield.svg");

@@ -23,9 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="bg-gradient-to-br from-[#001F3F] via-[#007F7F] to-[#FFD700] font-sans text-white dark:text-white dark:bg-black min-h-screen"
+        style={{
+          fontFamily: "Inter, Orbitron, sans-serif",
+        }}
       >
         {children}
       </body>
