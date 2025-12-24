@@ -9,6 +9,7 @@ try {
   webpack = { IgnorePlugin: class {} };
 }
 
+
 const experimental: Record<string, any> = {
   optimizePackageImports: ["lucide-react", "lodash-es"],
   serverActions: {
@@ -23,6 +24,8 @@ const experimental: Record<string, any> = {
 if (process.env.NEXT_ENABLE_URL_IMPORTS === "1") {
   experimental.urlImports = ["https://"];
 }
+
+experimental.turbo = false;
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
