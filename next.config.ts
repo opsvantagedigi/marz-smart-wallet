@@ -1,29 +1,14 @@
+// next.config.ts
 import type { NextConfig } from "next";
+import webpack from "webpack";
+import TerserPlugin from "terser-webpack-plugin";
 
 const nextConfig: NextConfig = {
-  // Enable React Compiler (Next.js 16)
   reactCompiler: true,
-
-  // Strict mode catches subtle bugs early
   reactStrictMode: true,
+  swcMinify: true,
+  compress: true,
 
-  // Production-level security headers
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-          { key: "X-XSS-Protection", value: "1; mode=block" },
-        ],
-      },
-    ];
-  },
-
-  // Image optimization for all remote assets
   images: {
     remotePatterns: [
       {
@@ -33,41 +18,60 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Enable URL imports (useful for remote configs, JSON, scripts)
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+          },
+          { key: "X-XSS-Protection", value: "1; mode=block" },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     urlImports: ["https://"],
     optimizePackageImports: ["lucide-react", "lodash-es"],
     serverActions: {
-      allowedOrigins: ["localhost:3000", "*.opsvantagedigital.online"],
+      allowedOrigins: [
+        "localhost:3000",
+        "opsvantagedigital.online",
+        "www.opsvantagedigital.online",
+      ],
     },
   },
 
-  // Enable edge runtime for ultra-fast API routes
-  // (Perfect for RPC proxy endpoints)
-  experimental: {
-    runtime: "edge",
-  },
-
-  // Webpack tuning for performance
   webpack: (config, { isServer }) => {
-    // Reduce bundle size by ignoring moment.js locales
+    // Ignore moment.js locales if ever used (bundle size)
     config.plugins.push(
-      new (require("webpack")).IgnorePlugin({
+      new webpack.IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
       })
     );
 
-    // Enable top-level await
+    // Allow top-level await if needed
     config.experiments = {
       ...config.experiments,
       topLevelAwait: true,
     };
 
-    // Remove console logs in production
+    // Strip console.* in client bundles for production
     if (!isServer) {
+      config.optimization = config.optimization || {};
       config.optimization.minimizer = [
-        new (require("terser-webpack-plugin"))({
+        new TerserPlugin({
           terserOptions: {
             compress: {
               drop_console: true,
@@ -79,12 +83,6 @@ const nextConfig: NextConfig = {
 
     return config;
   },
-
-  // Enable SWC minification (faster builds)
-  swcMinify: true,
-
-  // Enable compression for faster responses
-  compress: true,
 };
 
 export default nextConfig;
