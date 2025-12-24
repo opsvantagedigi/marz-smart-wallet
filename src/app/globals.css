@@ -5,12 +5,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global HTML reset + responsive type */
-html {
-  height: 100%;
-  width: 100%;
+/* Global HTML and Body reset */
+html,
+body {
+  min-height: 100vh;
   margin: 0;
   padding: 0;
+}
+
+html {
   font-size: 16px;
 }
 
@@ -26,7 +29,7 @@ html {
   }
 }
 
-/* Body background */
+/* Starry background - applied to body */
 body {
   background-image: url("https://raw.githubusercontent.com/ajaysidal/starry-assets/main/starfield.svg");
   background-size: cover;
@@ -34,9 +37,6 @@ body {
   background-attachment: fixed;
   background-position: center;
   background-color: #000000;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
 }
 
 /* Default typography */

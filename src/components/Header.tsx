@@ -8,29 +8,29 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40 backdrop-blur-xl bg-black/40 dark:bg-black/40 bg-white/40 shadow-sm">
+    <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-black/50 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="h-8 w-8 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 animate-glowPulse" />
-          <span className="font-orbitron text-lg sm:text-xl tracking-wide">
+          <span className="font-orbitron text-lg sm:text-xl tracking-wide text-white">
             Marz
           </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-inter">
-          <a href="#benefits" className="hover:text-cyan-400">
+          <a href="#benefits" className="text-white/80 hover:text-cyan-400 transition-colors">
             Benefits
           </a>
-          <a href="#features" className="hover:text-cyan-400">
+          <a href="#features" className="text-white/80 hover:text-cyan-400 transition-colors">
             Features
           </a>
-          <a href="#how-it-works" className="hover:text-cyan-400">
+          <a href="#how-it-works" className="text-white/80 hover:text-cyan-400 transition-colors">
             How it works
           </a>
-          <a href="#pricing" className="hover:text-cyan-400">
+          <a href="#pricing" className="text-white/80 hover:text-cyan-400 transition-colors">
             Pricing
           </a>
-          <a href="#faq" className="hover:text-cyan-400">
+          <a href="#faq" className="text-white/80 hover:text-cyan-400 transition-colors">
             FAQ
           </a>
         </nav>
@@ -39,17 +39,17 @@ export default function Header() {
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="p-2 rounded-full border border-white/20 dark:border-white/20 bg-black/40 dark:bg-black/40 hover:border-cyan-400/70 hover:bg-black/70 transition-colors"
+            className="p-2 rounded-full border border-white/20 bg-white/5 hover:border-cyan-400/70 hover:bg-white/10 transition-colors"
           >
             {theme === "dark" ? (
               <Sun className="w-4 h-4 text-yellow-300" />
             ) : (
-              <Moon className="w-4 h-4 text-slate-700" />
+              <Moon className="w-4 h-4 text-slate-300" />
             )}
           </button>
           <a
             href="#cta"
-            className="hidden sm:inline-flex px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 text-black text-sm font-semibold font-orbitron hover:scale-105 hover:shadow-lg hover:shadow-cyan-400/40 transition-transform"
+            className="hidden sm:inline-flex px-4 py-2 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black text-sm font-semibold font-orbitron hover:scale-105 hover:shadow-lg hover:shadow-cyan-400/40 transition-all duration-300"
           >
             Launch App
           </a>

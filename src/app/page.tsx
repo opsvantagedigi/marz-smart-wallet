@@ -50,10 +50,10 @@ export default function Home() {
 
           <Reveal delay={160}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold font-orbitron text-sm sm:text-base md:text-lg hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 transition-all duration-300 animate-glowPulse">
+              <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-bold font-orbitron text-sm sm:text-base md:text-lg hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 transition-all duration-300">
                 Get Started
               </button>
-              <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg backdrop-blur-xl bg-white/10 border border-white/30 text-white font-bold font-orbitron text-sm sm:text-base md:text-lg hover:bg-white/20 hover:border-white/50 transition-all duration-300 flex items-center gap-2">
+              <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg backdrop-blur-xl bg-white/5 border-2 border-[#00BFFF]/40 text-white font-bold font-orbitron text-sm sm:text-base md:text-lg hover:bg-white/10 hover:border-[#00BFFF]/70 hover:scale-105 transition-all duration-300 flex items-center gap-2">
                 View Pricing
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
@@ -234,6 +234,127 @@ export default function Home() {
                     </div>
                   )}
                 </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // PRICING
+  function PricingSection() {
+    const tiers = [
+      {
+        name: "Starter",
+        price: "Free",
+        description: "Perfect for getting started with smart wallets",
+        features: [
+          "Gasless transactions (up to 10/month)",
+          "Multi-chain support",
+          "Passkey authentication",
+          "Basic portfolio tracking",
+          "Community support",
+        ],
+        cta: "Get Started",
+        highlighted: false,
+      },
+      {
+        name: "Pro",
+        price: "$9.99/mo",
+        description: "For power users who need more",
+        features: [
+          "Unlimited gasless transactions",
+          "Advanced portfolio analytics",
+          "Priority support",
+          "Session keys & automation",
+          "Custom integrations",
+          "API access",
+        ],
+        cta: "Go Pro",
+        highlighted: true,
+      },
+      {
+        name: "Enterprise",
+        price: "Custom",
+        description: "Tailored solutions for businesses",
+        features: [
+          "Everything in Pro",
+          "Dedicated account manager",
+          "Custom SLA",
+          "White-label options",
+          "Advanced security features",
+          "24/7 premium support",
+        ],
+        cta: "Contact Sales",
+        highlighted: false,
+      },
+    ];
+
+    return (
+      <section
+        id="pricing"
+        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader
+            title="Simple, Transparent Pricing"
+            subtitle="Choose the plan that works for you"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {tiers.map((tier, idx) => (
+              <Reveal key={tier.name} delay={idx * 80}>
+                <GlassCard
+                  className={`p-6 lg:p-8 flex flex-col h-full ${
+                    tier.highlighted
+                      ? "border-2 border-[#00BFFF]/60 bg-white/10"
+                      : ""
+                  }`}
+                >
+                  {tier.highlighted && (
+                    <div className="mb-4 inline-flex items-center justify-center">
+                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black text-xs font-bold font-orbitron">
+                        MOST POPULAR
+                      </span>
+                    </div>
+                  )}
+                  <h3 className="text-2xl font-bold font-orbitron mb-2">
+                    {tier.name}
+                  </h3>
+                  <div className="mb-4">
+                    <span className="text-4xl font-bold text-white">
+                      {tier.price}
+                    </span>
+                    {tier.price !== "Free" && tier.price !== "Custom" && (
+                      <span className="text-white/60 text-sm ml-2">
+                        per month
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-white/70 text-sm mb-6">
+                    {tier.description}
+                  </p>
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {tier.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2 text-sm text-white/80"
+                      >
+                        <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    className={`w-full py-3 rounded-lg font-bold font-orbitron text-sm transition-all duration-300 ${
+                      tier.highlighted
+                        ? "bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105"
+                        : "bg-white/5 border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40"
+                    }`}
+                  >
+                    {tier.cta}
+                  </button>
+                </GlassCard>
               </Reveal>
             ))}
           </div>
@@ -483,7 +604,7 @@ export default function Home() {
                 Join thousands of crypto users who trust Marz with their digital
                 assets.
               </p>
-              <button className="px-8 sm:px-12 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold font-orbitron text-base sm:text-lg hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 transition-all duration-300">
+              <button className="px-8 sm:px-12 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-bold font-orbitron text-base sm:text-lg hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 transition-all duration-300">
                 Launch App Now
               </button>
             </GlassCard>
@@ -500,6 +621,7 @@ export default function Home() {
       <BenefitsSection />
       <FeaturesSection />
       <HowItWorksSection />
+      <PricingSection />
       <FAQSection />
       <ComparisonSection />
       <CTASection />
