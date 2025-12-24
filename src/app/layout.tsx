@@ -7,6 +7,11 @@ import ThemeProvider from "@/components/ThemeProvider";
 export const metadata: Metadata = {
   title: "Marz Smart Wallet",
   description: "Secure, smart digital asset management for the future",
+  icons: {
+    icon: "/brand-favicon.png",
+    shortcut: "/brand-favicon.png",
+    apple: "/brand-favicon.png",
+  },
 };
 
 export default function RootLayout({

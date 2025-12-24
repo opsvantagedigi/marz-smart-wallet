@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useTheme } from "./ThemeProvider";
 import { Moon, Sun } from "lucide-react";
 
@@ -11,9 +12,15 @@ export default function Header() {
     <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-black/50 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span className="h-8 w-8 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 animate-glowPulse" />
-          <span className="font-orbitron text-lg sm:text-xl tracking-wide text-white">
-            Marz
+          <Image
+            src="/brand-icon.png"
+            alt="Marz logo"
+            width={32}
+            height={32}
+            className="rounded-xl shadow-md"
+          />
+          <span className="bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] bg-clip-text text-transparent font-orbitron text-lg sm:text-xl font-bold tracking-wide">
+            MARZ Smart Wallet
           </span>
         </Link>
 
