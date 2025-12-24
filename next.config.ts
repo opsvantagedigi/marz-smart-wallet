@@ -1,12 +1,27 @@
 // next.config.ts
 import type { NextConfig } from "next";
-import webpack from "webpack";
-import TerserPlugin from "terser-webpack-plugin";
+let webpack: any;
+try {
+  // use require to avoid TypeScript compile error when package is not installed
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  webpack = require("webpack");
+} catch {
+  // provide a minimal fallback so server-side build won't crash when webpack isn't present
+  webpack = { IgnorePlugin: class {} };
+}
+let TerserPlugin: any;
+try {
+  // use require to avoid TypeScript compile error when package is not installed
+  // (Next.js may already handle minification for production builds)
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  TerserPlugin = require("terser-webpack-plugin");
+} catch {
+  TerserPlugin = undefined;
+}
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
-  swcMinify: true,
   compress: true,
 
   images: {
@@ -70,15 +85,20 @@ const nextConfig: NextConfig = {
     // Strip console.* in client bundles for production
     if (!isServer) {
       config.optimization = config.optimization || {};
-      config.optimization.minimizer = [
-        new TerserPlugin({
-          terserOptions: {
-            compress: {
-              drop_console: true,
+      try {
+        const TerserPlugin = require("terser-webpack-plugin");
+        config.optimization.minimizer = [
+          new TerserPlugin({
+            terserOptions: {
+              compress: { drop_console: true },
             },
-          },
-        }),
-      ];
+          }),
+        ];
+      } catch (e) {
+        // terser-webpack-plugin may not be available in the build environment;
+        // fall back to enabling default minimization
+        config.optimization.minimize = true;
+      }
     }
 
     return config;
