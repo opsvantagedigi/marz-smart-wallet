@@ -8,7 +8,21 @@
     "start": "next start",
     "lint": "eslint",
     "validate-env": "node scripts/validate-env.mjs",
-    "vercel:deploy": "vercel --prod --confirm"
+    "vercel:deploy": "vercel --prod --confirm",
+    "alchemy": "node scripts/alchemy-cli.mjs",
+    "alchemy:login": "node scripts/alchemy-cli.mjs login",
+    "alchemy:logout": "node scripts/alchemy-cli.mjs logout",
+    "alchemy:status": "node scripts/alchemy-cli.mjs status",
+    "alchemy:dashboard": "node scripts/alchemy-cli.mjs dashboard",
+    "alchemy:usage": "node scripts/alchemy-cli.mjs usage",
+    "alchemy:rollup:status": "node scripts/alchemy-cli.mjs rollup:status",
+    "alchemy:rollup:restart": "node scripts/alchemy-cli.mjs rollup:restart",
+    "alchemy:balance": "node scripts/alchemy-cli.mjs balance",
+    "alchemy:tokens": "node scripts/alchemy-cli.mjs tokens",
+    "alchemy:nfts": "node scripts/alchemy-cli.mjs nfts",
+    "alchemy:gas": "node scripts/alchemy-cli.mjs gas",
+    "alchemy:networks": "node scripts/alchemy-cli.mjs networks",
+    "wallet-health": "node scripts/examples/wallet-health-check.mjs"
   },
   "dependencies": {
     "@account-kit/infra": "^4.82.0",
@@ -27,7 +41,9 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "viem": "^2.43.3"
+    "viem": "^2.43.3",
+    "wagmi": "^3.1.2",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/estree": "^1.0.8",

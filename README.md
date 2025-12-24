@@ -20,6 +20,47 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Alchemy Extension CLI
+
+This project includes a powerful CLI tool for interacting with Alchemy services:
+
+```bash
+# Show all commands
+npm run alchemy help
+
+# Dashboard & Authentication
+npm run alchemy:login           # Login to Alchemy Dashboard
+npm run alchemy:status          # Check API and session status
+npm run alchemy:dashboard       # Open dashboard
+npm run alchemy:usage           # Test API and view usage
+
+# Blockchain Operations
+npm run alchemy:balance 0xYourAddress base-mainnet
+npm run alchemy:tokens 0xYourAddress
+npm run alchemy:nfts 0xYourAddress eth-mainnet
+npm run alchemy:gas base-mainnet
+
+# Utility Commands
+npm run alchemy:networks        # View available networks
+```
+
+### Quick Start - Dashboard Login
+
+```bash
+# Login to Alchemy Dashboard via terminal
+npm run alchemy:login
+
+# Check your connection status
+npm run alchemy:status
+
+# Open specific dashboard pages
+npm run alchemy dashboard apps
+npm run alchemy dashboard analytics
+npm run alchemy dashboard webhooks
+```
+
+For detailed CLI documentation, see [scripts/README-CLI.md](scripts/README-CLI.md).
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -34,3 +75,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+

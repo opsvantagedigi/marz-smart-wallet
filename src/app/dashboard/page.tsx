@@ -10,6 +10,9 @@ import { NFTGrid } from "@/components/dashboard/NFTGrid";
 import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
 import { ChainSelector } from "@/components/dashboard/ChainSelector";
 import { TokenCardSkeleton, NFTSkeleton, ActivitySkeleton } from "@/components/dashboard/Skeleton";
+import WalletConnectPanel from "@/components/WalletConnect";
+
+// TODO: Update MARZ RPC + Chain ID once rollup provisioning completes.
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -225,6 +228,9 @@ export default function DashboardPage() {
               <ActivityTimeline activity={activity} />
             )}
           </SectionCard>
+
+          {/* Wallet Access Panel */}
+          <WalletConnectPanel />
         </div>
       </div>
     </main>
