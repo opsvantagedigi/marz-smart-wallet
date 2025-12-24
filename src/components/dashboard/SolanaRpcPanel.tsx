@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SolanaAnalyticsPayload } from "@/lib/analyticsTypes";
+import { AnalyticsSummary, SolanaAnalyticsPayload } from "@/lib/analyticsTypes";
 
 interface SolanaKey {
   key: string;
@@ -129,7 +129,7 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
               <div className="text-xs font-mono bg-gray-100 rounded p-2 mb-1">HTTPS (devnet): https://api.marz-ops.solana.dev/v1/{k.key}</div>
               <div className="text-xs font-mono bg-gray-100 rounded p-2 mb-1">HTTPS (mainnet): https://api.marz-ops.solana.mainnet/v1/{k.key}</div>
 
-              {/* WebSocket Streaming Endpoints */}
+              (a as unknown as AnalyticsSummary)
               <div className="mt-4">
                 <div className="font-semibold text-xs mb-1">WebSocket Streaming Endpoints</div>
                 <div className="text-xs font-mono bg-gray-100 rounded p-2 mb-1">Devnet: wss://api.marz-ops.solana.dev/v1/{k.key}?network=devnet</div>
