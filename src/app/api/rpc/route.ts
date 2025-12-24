@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 const URLS: Record<string, string | undefined> = {
   "eth-mainnet": process.env.ALCHEMY_API_URL_ETH_MAINNET,
   "base-mainnet": process.env.ALCHEMY_API_URL_BASE_MAINNET,
