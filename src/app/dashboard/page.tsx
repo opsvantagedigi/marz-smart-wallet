@@ -11,6 +11,8 @@ import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
 import { ChainSelector } from "@/components/dashboard/ChainSelector";
 import { TokenCardSkeleton, NFTSkeleton, ActivitySkeleton } from "@/components/dashboard/Skeleton";
 
+import { SolanaRpcPanel } from "@/components/dashboard/SolanaRpcPanel";
+
 // TODO: Update MARZ RPC + Chain ID once rollup provisioning completes.
 
 export default function DashboardPage() {
@@ -175,58 +177,63 @@ export default function DashboardPage() {
         )}
 
         {/* Dashboard Content */}
-        <div className="space-y-6">
+        <div className="space-y-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Token Balances */}
-          <SectionCard title="Token Balances">
-            {dataLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <TokenCardSkeleton />
-                <TokenCardSkeleton />
-                <TokenCardSkeleton />
-                <TokenCardSkeleton />
-              </div>
-            ) : portfolio?.tokenBalances?.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {portfolio.tokenBalances.slice(0, 8).map((token: any, i: number) => (
-                  <TokenCard
-                    key={i}
-                    symbol={token.symbol || "Unknown"}
-                    balance={parseFloat(token.balance) / Math.pow(10, token.decimals || 18)}
-                    price={0}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-white/50 text-center py-8">No tokens found</div>
-            )}
-          </SectionCard>
+          <div className="md:col-span-2 space-y-6">
+            <SectionCard title="Token Balances">
+              {dataLoading ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <TokenCardSkeleton />
+                  <TokenCardSkeleton />
+                  <TokenCardSkeleton />
+                  <TokenCardSkeleton />
+                </div>
+              ) : portfolio?.tokenBalances?.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {portfolio.tokenBalances.slice(0, 8).map((token: any, i: number) => (
+                    <TokenCard
+                      key={i}
+                      symbol={token.symbol || "Unknown"}
+                      balance={parseFloat(token.balance) / Math.pow(10, token.decimals || 18)}
+                      price={0}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-white/50 text-center py-8">No tokens found</div>
+              )}
+            </SectionCard>
 
-          {/* NFTs */}
-          <SectionCard title="NFT Collection">
-            {dataLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <NFTSkeleton />
-                <NFTSkeleton />
-                <NFTSkeleton />
-                <NFTSkeleton />
-              </div>
-            ) : (
-              <NFTGrid nfts={nfts} />
-            )}
-          </SectionCard>
+            {/* NFTs */}
+            <SectionCard title="NFT Collection">
+              {dataLoading ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <NFTSkeleton />
+                  <NFTSkeleton />
+                  <NFTSkeleton />
+                  <NFTSkeleton />
+                </div>
+              ) : (
+                <NFTGrid nfts={nfts} />
+              )}
+            </SectionCard>
 
-          {/* Activity */}
-          <SectionCard title="Recent Activity">
-            {dataLoading ? (
-              <div className="space-y-3">
-                <ActivitySkeleton />
-                <ActivitySkeleton />
-                <ActivitySkeleton />
-              </div>
-            ) : (
-              <ActivityTimeline activity={activity} />
-            )}
-          </SectionCard>
+            {/* Activity */}
+            <SectionCard title="Recent Activity">
+              {dataLoading ? (
+                <div className="space-y-3">
+                  <ActivitySkeleton />
+                  <ActivitySkeleton />
+                  <ActivitySkeleton />
+                </div>
+              ) : (
+                <ActivityTimeline activity={activity} />
+              )}
+            </SectionCard>
+          </div>
+          <div className="md:col-span-1">
+            {walletAddress && <SolanaRpcPanel userId={walletAddress} />}
+          </div>
         </div>
       </div>
     </main>

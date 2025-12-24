@@ -23,6 +23,7 @@
     "alchemy:gas": "node scripts/alchemy-cli.mjs gas",
     "alchemy:networks": "node scripts/alchemy-cli.mjs networks",
     "wallet-health": "node scripts/examples/wallet-health-check.mjs"
+      "solana:ws": "tsx src/solanaWsGateway.ts"
   },
   "dependencies": {
     "@account-kit/infra": "^4.82.0",
