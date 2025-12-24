@@ -29,8 +29,8 @@ function formatUrl(entry: SitemapEntry) {
 export default function sitemap(): MetadataRoute.Sitemap {
   return ENTRIES.map(entry => ({
     url: new URL(entry.path, BASE_URL).toString(),
-    lastModified: entry.lastModified,
-    changeFrequency: entry.changeFrequency,
+    lastModified: entry.lastModified.toISOString(),
+    changeFrequency: entry.changeFrequency as "daily",
     priority: entry.priority
   }));
 }
