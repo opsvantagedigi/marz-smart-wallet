@@ -1,0 +1,48 @@
+./scripts/fix-sitemap.sh
+#!/bin/bash
+set -e
+
+FILE="src/app/sitemap.ts"
+
+if [ ! -f "$FILE" ]; then
+  echo "❌ File not found: $FILE"
+  exit 1
+fi
+
+echo "🔧 Fixing Turbopack-incompatible template literal in sitemap.ts..."
+
+# Replace the multiline template literal with a safe join() version
+sed -i 's/return `[^`]*`;/return [\
+  "<url>",\
+  `  <loc>\${new URL(e.path, base).toString()}</loc>`,\
+  `  <lastmod>\${e.lastModified.toISOString()}</lastmod>`,\
+  "<\/url>",\
+].join("\\n");/' "$FILE"
+
+echo "✅ sitemap.ts has been patched for Turbopack compatibility."#!/bin/bash
+set -e
+
+FILE="src/app/sitemap.ts"
+
+if [ ! -f "$FILE" ]; then
+  echo "❌ File not found: $FILE"
+  exit 1
+fi
+
+echo "🔧 Fixing Turbopack-incompatible template literal in sitemap.ts..."
+
+# Replace the multiline template literal with a safe join() version
+sed -i 's/return `[^`]*`;/return [\
+  "<url>",\
+  `  <loc>\${new URL(e.path, base).toString()}</loc>`,\
+  `  <lastmod>\${e.lastModified.toISOString()}</lastmod>`,\
+  "<\/url>",\
+].join("\\n");/' "$FILE"
+
+echo "✅ sitemap.ts has been patched for Turbopack compatibility."
+mkdir -p scripts
+nano scripts/fix-sitemap.sh
+# (Paste the script above, save and exit)
+chmod +x scripts/fix-sitemap.sh
+./scripts/fix-sitemap.sh
+

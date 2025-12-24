@@ -27,7 +27,6 @@ if (process.env.NEXT_ENABLE_URL_IMPORTS === "1") {
 const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
-  swcMinify: true,
   compress: true,
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
