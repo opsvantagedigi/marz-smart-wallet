@@ -1,6 +1,8 @@
+import type { NextConfig } from "next";
 
 let webpack: any;
 try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   webpack = require("webpack");
 } catch {
   webpack = { IgnorePlugin: class {} };
@@ -65,19 +67,6 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-import type { NextConfig } from "next";
-
-let webpack: any;
-try {
-  // safe require to avoid TS errors when webpack isn't installed
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  webpack = require("webpack");
-} catch {
-  webpack = { IgnorePlugin: class {} };
-}
-
-
-const experimental: Record<string, any> = {
   optimizePackageImports: ["lucide-react", "lodash-es"],
   serverActions: {
     allowedOrigins: [
