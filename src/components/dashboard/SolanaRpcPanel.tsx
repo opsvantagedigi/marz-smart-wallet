@@ -25,11 +25,29 @@ interface AnalyticsSummary {
   }>;
 }
 
+interface ExtendedAnalytics {
+  tier: string;
+  tierName: string;
+  http: {
+    used: number;
+    limit: number;
+    remaining: number | number;
+    usagePercent: number;
+  };
+  ws: {
+    used: number;
+    limit: number;
+    remaining: number | number;
+    usagePercent: number;
+  };
+  summary: AnalyticsSummary;
+}
+
 export function SolanaRpcPanel({ userId }: { userId: string }) {
   const [keys, setKeys] = useState<SolanaKey[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [analytics, setAnalytics] = useState<Record<string, AnalyticsSummary>>({});
+  const [analytics, setAnalytics] = useState<Record<string, ExtendedAnalytics | AnalyticsSummary>>({});
 
 
   async function fetchKeys() {
@@ -100,9 +118,13 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
       <div className="space-y-4">
         {keys.length === 0 && <div className="text-gray-500">No API keys yet.</div>}
         {keys.map((k) => {
-          const limit = k.tier === "starter" ? 2000000 : 50000;
-          const remaining = Math.max(0, limit - k.usageCount);
-          const a = analytics[k.key];
+          // prefer extended analytics from the analytics API
+          const a = analytics[k.key] as ExtendedAnalytics | undefined;
+          const tierName = a?.tierName || k.tier;
+          const httpUsed = a?.http?.used ?? k.usageCount;
+          const httpLimit = a?.http?.limit ?? (k.tier === "starter" ? 2000000 : 50000);
+          const httpRemaining = typeof a?.http?.remaining === "number" ? a!.http.remaining : Math.max(0, httpLimit - httpUsed);
+          const httpPercent = a?.http?.usagePercent ?? (httpUsed / Math.max(1, httpLimit));
           // WebSocket analytics
           let wsConnections = 0, wsMessages = 0, wsErrors = 0;
           if (a) {
@@ -117,11 +139,15 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
                 <span className="text-xs text-gray-500">{new Date(k.createdAt).toLocaleString()}</span>
               </div>
               <div className="mb-2 flex gap-2 items-center">
-                <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 font-bold">Tier: {k.tier}</span>
-                <button className="ml-2 px-2 py-1 rounded bg-yellow-300 text-black text-xs font-semibold hover:bg-yellow-200 transition-colors">Upgrade</button>
+                <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700 font-bold">Tier: {tierName}</span>
+                <button onClick={() => alert("Upgrade flow coming soon")} className="ml-2 px-2 py-1 rounded bg-yellow-300 text-black text-xs font-semibold hover:bg-yellow-200 transition-colors">Upgrade</button>
               </div>
-              <div className="text-xs mb-2">Requests used this month: <span className="font-mono font-bold">{k.usageCount}</span></div>
-              <div className="text-xs mb-2">Requests remaining: <span className="font-mono font-bold">{remaining}</span> / {limit}</div>
+              <div className="text-xs mb-2">Requests used this month: <span className="font-mono font-bold">{httpUsed}</span></div>
+              <div className="text-xs mb-2">Requests remaining: <span className="font-mono font-bold">{httpRemaining}</span> / {httpLimit}</div>
+              <div className="w-full bg-gray-200 h-2 rounded-full mb-2 overflow-hidden">
+                <div className="h-2 bg-green-500" style={{ width: `${Math.min(100, Math.round(httpPercent * 100))}%` }} />
+              </div>
+              {httpPercent > 0.8 && <div className="text-xs text-yellow-700 mb-2">You're nearing your plan limit. Consider upgrading.</div>}
               <div className="text-xs mb-2">Reset date: <span className="font-mono">{new Date(k.resetAt).toLocaleString()}</span></div>
               <div className="text-xs font-mono break-all mb-2">{k.key}</div>
               <div className="text-xs text-gray-700 mb-1">Example endpoints:</div>

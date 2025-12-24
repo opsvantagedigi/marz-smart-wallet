@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getKey, resetIfNeeded, incrementUsage, getUsage, RATE_LIMITS } from "@/lib/solanaApiKeyStore";
-import { addLog } from "@/lib/solanaAnalyticsStore";
+import { getKey, getTierConfig } from "@/lib/solanaApiKeyStore";
+import { addLog, incrementHttpUsage, getUsageForKey } from "@/lib/solanaAnalyticsStore";
 
 const NETWORKS = {
   devnet: process.env.SOLANA_UPSTREAM_DEVNET_RPC!,
@@ -14,18 +14,20 @@ export async function POST(req: NextRequest) {
   const keyObj = getKey(apiKey);
   if (!keyObj) return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
 
-  // Rate limiting
-  resetIfNeeded(apiKey);
-  const usage = getUsage(apiKey);
-  const tier = keyObj.tier;
-  const limit = RATE_LIMITS[tier];
-  if (usage && usage.usageCount >= limit) {
-    return NextResponse.json(
-      { error: "Rate limit exceeded", limit },
-      { status: 429 }
-    );
+  // Rate limiting based on tier config + analytics counters
+  const tier = keyObj.tier as any;
+  const tierConfig = getTierConfig(tier);
+  const usage = getUsageForKey(apiKey);
+  const used = usage?.httpRequests ?? 0;
+  if (used >= tierConfig.monthlyRequestLimit) {
+    return NextResponse.json({ error: "Request limit exceeded for your plan. Please upgrade your tier." }, { status: 429 });
   }
-  incrementUsage(apiKey);
+  // increment usage (record before forwarding so spikes count)
+  incrementHttpUsage(apiKey, 1);
+  // warn at 80% (console for now)
+  if (used / Math.max(1, tierConfig.monthlyRequestLimit) >= 0.8) {
+    console.warn(`API key ${apiKey} at ${Math.round((used / tierConfig.monthlyRequestLimit) * 100)}% of HTTP request limit`);
+  }
 
   const { searchParams } = new URL(req.url);
   const network = searchParams.get("network") === "mainnet" ? "mainnet" : "devnet";
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
     key: apiKey,
     method,
     network,
-    usage: usage?.usageCount,
+    usage: used,
     tier,
     timestamp: new Date().toISOString(),
   });

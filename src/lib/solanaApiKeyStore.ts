@@ -1,13 +1,72 @@
 // In-memory Solana API key store for v0
 import crypto from "crypto";
 
+export type SolanaTier = "free" | "starter" | "pro" | "enterprise";
+
+export interface SolanaTierConfig {
+  name: string;
+  monthlyRequestLimit: number; // HTTP RPC requests
+  monthlyWsMessageLimit: number; // WS messages
+  allowDevnet: boolean;
+  allowMainnet: boolean;
+  allowDevnetWs: boolean;
+  allowMainnetWs: boolean;
+}
+
+export const SOLANA_TIER_CONFIG: Record<SolanaTier, SolanaTierConfig> = {
+  free: {
+    name: "Free",
+    monthlyRequestLimit: 50_000,
+    monthlyWsMessageLimit: 0,
+    allowDevnet: true,
+    allowMainnet: false,
+    allowDevnetWs: false,
+    allowMainnetWs: false,
+  },
+  starter: {
+    name: "Starter",
+    monthlyRequestLimit: 2_000_000,
+    monthlyWsMessageLimit: 200_000,
+    allowDevnet: true,
+    allowMainnet: true,
+    allowDevnetWs: true,
+    allowMainnetWs: false,
+  },
+  pro: {
+    name: "Pro",
+    monthlyRequestLimit: 10_000_000,
+    monthlyWsMessageLimit: 1_000_000,
+    allowDevnet: true,
+    allowMainnet: true,
+    allowDevnetWs: true,
+    allowMainnetWs: true,
+  },
+  enterprise: {
+    name: "Enterprise",
+    monthlyRequestLimit: Number.POSITIVE_INFINITY,
+    monthlyWsMessageLimit: Number.POSITIVE_INFINITY,
+    allowDevnet: true,
+    allowMainnet: true,
+    allowDevnetWs: true,
+    allowMainnetWs: true,
+  },
+};
+
+export function getTierConfig(tier: SolanaTier): SolanaTierConfig {
+  return SOLANA_TIER_CONFIG[tier];
+}
 
 interface SolanaApiKey {
   key: string;
   userId: string;
   label?: string;
   createdAt: Date;
-  tier: "free" | "starter";
+  tier: SolanaTier;
+  // Billing fields for future Stripe integration
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  billingStatus?: "active" | "past_due" | "canceled" | "trialing";
+  // legacy usage fields (kept for compatibility, primary usage is in analytics store)
   usageCount: number;
   resetAt: number; // timestamp (ms)
 }
@@ -15,13 +74,7 @@ interface SolanaApiKey {
 
 const keys: SolanaApiKey[] = [];
 
-export const RATE_LIMITS = {
-  free: 50000,
-  starter: 2000000,
-};
-
-
-export async function createKey(userId: string, label?: string, tier: "free" | "starter" = "free"): Promise<string> {
+export async function createKey(userId: string, label?: string, tier: SolanaTier = "free"): Promise<string> {
   const key = `sk_${crypto.randomUUID()}`;
   const now = new Date();
   const resetAt = getNextResetTimestamp(now.getTime());
@@ -29,11 +82,9 @@ export async function createKey(userId: string, label?: string, tier: "free" | "
   return key;
 }
 
-
-export async function listKeys(userId: string): Promise<{ key: string; label?: string; createdAt: Date; tier: string; usageCount: number; resetAt: number }[]> {
+export async function listKeys(userId: string): Promise<{ key: string; label?: string; createdAt: Date; tier: SolanaTier; usageCount: number; resetAt: number }[]> {
   return keys.filter(k => k.userId === userId).map(({ key, label, createdAt, tier, usageCount, resetAt }) => ({ key, label, createdAt, tier, usageCount, resetAt }));
 }
-
 
 export function getKey(key: string): SolanaApiKey | undefined {
   return keys.find(k => k.key === key);
@@ -54,7 +105,7 @@ export function resetIfNeeded(key: string): void {
   }
 }
 
-export function getUsage(key: string): { usageCount: number; resetAt: number; tier: string } | undefined {
+export function getUsage(key: string): { usageCount: number; resetAt: number; tier: SolanaTier } | undefined {
   const k = getKey(key);
   if (!k) return undefined;
   return { usageCount: k.usageCount, resetAt: k.resetAt, tier: k.tier };

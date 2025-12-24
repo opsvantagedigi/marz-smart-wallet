@@ -1,8 +1,8 @@
 import WebSocket from "ws";
 const WebSocketServer = WebSocket.Server;
 import { IncomingMessage } from "http";
-import { getKey } from "./lib/solanaApiKeyStore";
-import { addLog } from "./lib/solanaAnalyticsStore";
+import { getKey, getTierConfig } from "./lib/solanaApiKeyStore";
+import { addLog, incrementWsUsage, getUsageForKey } from "./lib/solanaAnalyticsStore";
 
 const PORT = parseInt(process.env.SOLANA_WS_GATEWAY_PORT || "8081");
 
@@ -25,12 +25,24 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       client.close(4001, "Invalid API key");
       return;
     }
-    if (keyObj.tier === "free") {
-      client.close(4003, "WebSocket not available on free tier");
+    const tierConfig = getTierConfig(keyObj.tier as any);
+    if (tierConfig.monthlyWsMessageLimit === 0) {
+      client.close(4003, "WebSocket not available on your tier");
       return;
     }
-    if (keyObj.tier === "starter" && network !== "devnet") {
-      client.close(4003, "Starter tier only supports devnet");
+    if (!tierConfig.allowDevnetWs && network === "devnet") {
+      client.close(4003, "WebSocket not available on your tier");
+      return;
+    }
+    if (!tierConfig.allowMainnetWs && network === "mainnet") {
+      client.close(4003, "WebSocket not available on your tier");
+      return;
+    }
+    // enforce monthly ws message limits
+    const usage = getUsageForKey(apiKey);
+    const wsUsed = usage?.wsMessages ?? 0;
+    if (wsUsed >= tierConfig.monthlyWsMessageLimit) {
+      client.close(4004, "WebSocket message limit exceeded for your plan. Please upgrade.");
       return;
     }
     const upstreamUrl =
@@ -62,8 +74,18 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
     });
     client.on("message", (data: import("ws").Data) => {
       if (open && upstream.readyState === upstream.OPEN) {
+        // increment usage per message
+        incrementWsUsage(apiKey, 1);
+        const newUsage = getUsageForKey(apiKey)?.wsMessages ?? 0;
+        // forward
         upstream.send(data);
         addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_MESSAGE", network, success: true, durationMs: 0 });
+        // check limit after increment
+        if (newUsage >= tierConfig.monthlyWsMessageLimit) {
+          // politely close
+          if (client.readyState === client.OPEN) client.close(4004, "WebSocket message limit exceeded for your plan. Please upgrade.");
+          if (upstream.readyState === upstream.OPEN) upstream.close();
+        }
       }
     });
     client.on("close", () => {
