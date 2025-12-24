@@ -1,20 +1,31 @@
 "use client";
 
-import { useSmartWallet } from "@/hooks/useSmartWallet";
-import { getWalletConnect } from "@/lib/walletconnect";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  const { client, address } = useSmartWallet();
+  const router = useRouter();
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [walletType, setWalletType] = useState<"smart" | "external" | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function connectExternalWallet() {
-    try {
-      const wc = await getWalletConnect();
-      await wc.connect();
-      alert("External wallet connected!");
-    } catch (error) {
-      console.error("WalletConnect error:", error);
-    }
-  }
+  useEffect(() => {
+    // Check if user has connected wallet
+    // For now, redirect to onboarding if no wallet detected
+    // In production, this would check localStorage or wallet state
+    const checkWallet = async () => {
+      // Simulate wallet check
+      const hasWallet = false; // Replace with actual wallet check logic
+      
+      if (!hasWallet) {
+        router.push("/onboarding");
+      } else {
+        setIsLoading(false);
+      }
+    };
+    
+    checkWallet();
+  }, [router]);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-black via-[#001a1a] to-[#003333] py-20 px-4">
@@ -29,49 +40,39 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Smart Wallet Status */}
-        {!address && (
+        {/* Wallet Status */}
+        {isLoading && (
           <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
-            <h2 className="font-orbitron text-xl mb-2">Setting up your MARZ Smart Wallet…</h2>
-            <p className="text-white/70 font-inter">Please wait while we deploy your smart account.</p>
+            <h2 className="font-orbitron text-xl mb-2">Loading Dashboard…</h2>
+            <p className="text-white/70 font-inter">Checking wallet connection status.</p>
           </div>
         )}
 
-        {address && (
+        {!isLoading && walletAddress && (
           <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white space-y-4">
             <div>
-              <h2 className="font-orbitron text-xl mb-2">Your Smart Wallet is Ready</h2>
-              <p className="text-white/70 font-inter break-all">{address}</p>
+              <h2 className="font-orbitron text-xl mb-2">
+                {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
+              </h2>
+              <p className="text-white/70 font-inter text-sm mb-2">
+                Type: {walletType === "smart" ? "Alchemy Account Abstraction" : "WalletConnect / Coinbase"}
+              </p>
+              <p className="text-white/70 font-inter break-all text-xs">{walletAddress}</p>
             </div>
-            <button
-              onClick={connectExternalWallet}
-              className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 text-white font-inter text-sm transition-all"
-            >
-              Connect External Wallet (WalletConnect)
-            </button>
           </div>
         )}
 
-        {/* Test Transaction Button */}
-        {client && (
-          <button
-            onClick={async () => {
-              await client.sendUserOperation({
-                target: address!,
-                data: "0x",
-              });
-              alert("Gasless test transaction sent!");
-            }}
-            className="
-              mt-4 px-6 py-3 rounded-lg
-              bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700]
-              text-black font-orbitron text-sm
-              hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50
-              transition-all duration-300
-            "
-          >
-            Send Gasless Test Transaction
-          </button>
+        {!isLoading && !walletAddress && (
+          <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
+            <h2 className="font-orbitron text-xl mb-2">No Wallet Connected</h2>
+            <p className="text-white/70 font-inter mb-4">Please connect a wallet to continue.</p>
+            <button
+              onClick={() => router.push("/onboarding")}
+              className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm hover:scale-105 transition-all"
+            >
+              Connect Wallet
+            </button>
+          </div>
         )}
       </div>
     </main>

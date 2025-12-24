@@ -50,7 +50,7 @@ export default function Header() {
           </button>
 
           <Link
-            href="/dashboard"
+            href="/onboarding"
             className="hidden sm:inline-flex px-4 py-2 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
           >
             Launch App
