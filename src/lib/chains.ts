@@ -5,10 +5,10 @@ export const marzChain = {
   network: "marz-neosphere",
   rpcUrls: {
     default: {
-      http: ["https://marz-neosphere.rpc.caldera.xyz/http"],
+      http: [process.env.NEXT_PUBLIC_MARZ_RPC_URL || "https://marz-neosphere.rpc.caldera.xyz/http"],
     },
     public: {
-      http: ["https://marz-neosphere.rpc.caldera.xyz/http"],
+      http: [process.env.NEXT_PUBLIC_MARZ_RPC_URL || "https://marz-neosphere.rpc.caldera.xyz/http"],
     },
   },
   nativeCurrency: {
