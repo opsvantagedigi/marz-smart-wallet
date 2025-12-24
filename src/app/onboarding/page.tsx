@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { getWalletConnect } from "@/lib/walletconnect";
+import { initWalletConnect } from "@/lib/walletconnect";
+import { setWalletState } from "@/lib/wallet-state";
 import { Wallet, Mail, ArrowRight } from "lucide-react";
 
 export default function OnboardingPage() {
@@ -13,14 +14,16 @@ export default function OnboardingPage() {
     setIsConnecting(true);
     setError(null);
     try {
-      const wc = await getWalletConnect();
-      const accounts = await wc.enable();
-      if (accounts && accounts.length > 0) {
-        // Store wallet info and redirect to dashboard
-        localStorage.setItem("wallet_address", accounts[0]);
-        localStorage.setItem("wallet_type", "external");
-        window.location.href = "/dashboard";
+      const provider = await initWalletConnect();
+      const accounts = await provider.enable();
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error("No accounts returned from WalletConnect");
       }
+
+      const address = accounts[0];
+      setWalletState("external", address);
+      window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("WalletConnect error:", err);
       setError(err?.message || "Failed to connect wallet. Please try again.");
@@ -30,9 +33,16 @@ export default function OnboardingPage() {
   }
 
   function handleSmartWallet() {
-    // For Smart Wallet, redirect to dashboard which will show setup
-    localStorage.setItem("wallet_type", "smart");
-    window.location.href = "/dashboard";
+    setError(null);
+    try {
+      // For Smart Wallet, set type and redirect to dashboard for setup
+      // We'll set a placeholder address that dashboard will replace
+      setWalletState("smart", "0x0000000000000000000000000000000000000000");
+      window.location.href = "/dashboard";
+    } catch (err: any) {
+      console.error("Smart Wallet error:", err);
+      setError("Failed to initialize Smart Wallet. Please try again.");
+    }
   }
 
   return (
@@ -50,8 +60,8 @@ export default function OnboardingPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-            <p className="text-red-400 font-inter text-sm">{error}</p>
+          <div className="mb-6 p-4 rounded-lg bg-red-900/70 border border-red-500/60">
+            <p className="text-red-100 font-inter text-sm">{error}</p>
           </div>
         )}
 

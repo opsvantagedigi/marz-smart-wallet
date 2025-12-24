@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+import { WalletDebugPanel } from "@/components/WalletDebugPanel";
 
 export const metadata: Metadata = {
   title: "Marz Smart Wallet",
@@ -29,6 +30,7 @@ export default function RootLayout({
             <main className="flex-1 pt-16 pb-24">{children}</main>
             <Footer />
           </div>
+          <WalletDebugPanel />
         </ThemeProvider>
       </body>
     </html>
