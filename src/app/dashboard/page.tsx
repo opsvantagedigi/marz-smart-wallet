@@ -1,23 +1,30 @@
 "use client";
 
-import { AlchemyAccountProvider, useUser } from "@account-kit/react";
-import { config, queryClient } from "@/lib/account-kit-config";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-function DashboardContent() {
-  const user = useUser();
+export default function DashboardPage() {
   const router = useRouter();
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [walletType, setWalletType] = useState<"smart" | "external" | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // If no user is authenticated, redirect to onboarding
-    if (user === null) {
-      router.push("/onboarding");
-    }
-  }, [user, router]);
+    // Check wallet connection from localStorage
+    const type = localStorage.getItem("wallet_type") as "smart" | "external" | null;
+    const address = localStorage.getItem("wallet_address");
 
-  if (user === undefined) {
-    // Loading state
+    if (!type) {
+      // No wallet connected, redirect to onboarding
+      router.push("/onboarding");
+    } else {
+      setWalletType(type);
+      setWalletAddress(address);
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-black via-[#001a1a] to-[#003333] py-20 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
@@ -39,14 +46,6 @@ function DashboardContent() {
     );
   }
 
-  if (user === null) {
-    // Will redirect, show loading
-    return null;
-  }
-
-  // User is authenticated
-  const address = user.address;
-
   return (
     <main className="min-h-screen bg-gradient-to-br from-black via-[#001a1a] to-[#003333] py-20 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -63,24 +62,39 @@ function DashboardContent() {
         {/* Wallet Status */}
         <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white space-y-4">
           <div>
-            <h2 className="font-orbitron text-xl mb-2">Your Smart Wallet is Ready</h2>
+            <h2 className="font-orbitron text-xl mb-2">
+              {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
+            </h2>
             <p className="text-white/70 font-inter text-sm mb-2">
-              Type: Alchemy Smart Account
+              Type: {walletType === "smart" ? "Alchemy Smart Account (Setup Required)" : "WalletConnect / External"}
             </p>
-            <p className="text-white/70 font-inter break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
-              {address}
-            </p>
+            {walletAddress && (
+              <p className="text-white/70 font-inter break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
+                {walletAddress}
+              </p>
+            )}
           </div>
           <div className="flex gap-3">
+            {walletAddress && (
+              <button
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm hover:scale-105 transition-all"
+                onClick={() => {
+                  navigator.clipboard.writeText(walletAddress);
+                  alert("Address copied!");
+                }}
+              >
+                Copy Address
+              </button>
+            )}
             <button
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm hover:scale-105 transition-all"
+              className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 text-white font-inter text-sm transition-all"
               onClick={() => {
-                // Copy address to clipboard
-                navigator.clipboard.writeText(address);
-                alert("Address copied to clipboard!");
+                localStorage.removeItem("wallet_type");
+                localStorage.removeItem("wallet_address");
+                router.push("/onboarding");
               }}
             >
-              Copy Address
+              Disconnect
             </button>
           </div>
         </div>
@@ -102,13 +116,5 @@ function DashboardContent() {
         </div>
       </div>
     </main>
-  );
-}
-
-export default function DashboardPage() {
-  return (
-    <AlchemyAccountProvider config={config} queryClient={queryClient}>
-      <DashboardContent />
-    </AlchemyAccountProvider>
   );
 }
