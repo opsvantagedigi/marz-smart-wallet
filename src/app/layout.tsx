@@ -10,11 +10,13 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[url('/stars.svg')] bg-cover bg-fixed bg-center bg-no-repeat text-slate-900">
+      <body className="min-h-screen text-slate-900">
         <Header />
 
-        <main className="min-h-screen backdrop-blur-xl bg-white/5">
-          {children}
+        <main className="min-h-screen">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+            {children}
+          </div>
         </main>
 
         <Footer />

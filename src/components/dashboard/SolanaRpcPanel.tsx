@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { SolanaAnalyticsPayload } from "@/lib/analyticsTypes";
 
 interface SolanaKey {
   key: string;
@@ -9,45 +10,11 @@ interface SolanaKey {
   resetAt: number;
 }
 
-
-interface AnalyticsSummary {
-  total: number;
-  errors: number;
-  avgDuration: number;
-  byMethod: Record<string, number>;
-  byNetwork: Record<string, number>;
-  recent: Array<{
-    timestamp: number;
-    method: string;
-    success: boolean;
-    network: string;
-    durationMs: number;
-  }>;
-}
-
-interface ExtendedAnalytics {
-  tier: string;
-  tierName: string;
-  http: {
-    used: number;
-    limit: number;
-    remaining: number | number;
-    usagePercent: number;
-  };
-  ws: {
-    used: number;
-    limit: number;
-    remaining: number | number;
-    usagePercent: number;
-  };
-  summary: AnalyticsSummary;
-}
-
 export function SolanaRpcPanel({ userId }: { userId: string }) {
   const [keys, setKeys] = useState<SolanaKey[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [analytics, setAnalytics] = useState<Record<string, ExtendedAnalytics | AnalyticsSummary>>({});
+  const [analytics, setAnalytics] = useState<Record<string, SolanaAnalyticsPayload>>({});
 
 
   async function fetchKeys() {
@@ -60,14 +27,14 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
       const data = await res.json();
       setKeys(data.keys || []);
       // Fetch analytics for each key
-      const analyticsObj: Record<string, AnalyticsSummary> = {};
+      const analyticsObj: Record<string, SolanaAnalyticsPayload> = {};
       await Promise.all(
         (data.keys || []).map(async (k: SolanaKey) => {
           const aRes = await fetch("/api/solana/analytics", {
             headers: { "x-api-key": k.key },
           });
           const aData = await aRes.json();
-          analyticsObj[k.key] = aData;
+          analyticsObj[k.key] = aData as SolanaAnalyticsPayload;
         })
       );
       setAnalytics(analyticsObj);
@@ -118,22 +85,28 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
       <div className="space-y-4">
         {keys.length === 0 && <div className="text-gray-500">No API keys yet.</div>}
         {keys.map((k) => {
-          // prefer extended analytics from the analytics API
-          const a = analytics[k.key] as ExtendedAnalytics | undefined;
-          const tierName = a?.tierName || k.tier;
-          const httpUsed = a?.http?.used ?? k.usageCount;
-          const httpLimit = a?.http?.limit ?? (k.tier === "starter" ? 2000000 : 50000);
-          const httpRemaining = typeof a?.http?.remaining === "number" ? a!.http.remaining : Math.max(0, httpLimit - httpUsed);
-          const httpPercent = a?.http?.usagePercent ?? (httpUsed / Math.max(1, httpLimit));
-          // WebSocket analytics
-          let wsConnections = 0, wsMessages = 0, wsErrors = 0;
-          if (a) {
-            const extended = a as Partial<ExtendedAnalytics>;
-            const s: AnalyticsSummary = extended.summary !== undefined ? extended.summary : (a as AnalyticsSummary);
-            wsConnections = (s.byMethod["WEBSOCKET_CONNECTION"] || 0) - (s.byMethod["WEBSOCKET_CLOSE"] || 0);
-            wsMessages = s.byMethod["WEBSOCKET_MESSAGE"] || 0;
-            wsErrors = s.byMethod["WEBSOCKET_ERROR"] || 0;
+          const a = analytics[k.key];
+          // If analytics not yet loaded, show a gentle placeholder
+          if (!a) {
+            return (
+              <div key={k.key} className="p-4 rounded-xl bg-white/60 border border-white/20 shadow mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold">{k.label || "Unnamed key"}</span>
+                  <span className="text-xs text-gray-500">{new Date(k.createdAt).toLocaleString()}</span>
+                </div>
+                <div className="text-gray-500">Loading analytics…</div>
+              </div>
+            );
           }
+
+          const tierName = a.tierName;
+          const httpUsed = a.usage.http.used;
+          const httpLimit = a.usage.http.limit;
+          const httpRemaining = a.usage.http.remaining;
+          const httpPercent = a.usage.http.usagePercent;
+          const wsConnections = (a.summary.byMethod["WEBSOCKET_CONNECTION"] || 0) - (a.summary.byMethod["WEBSOCKET_CLOSE"] || 0);
+          const wsMessages = a.summary.byMethod["WEBSOCKET_MESSAGE"] || 0;
+          const wsErrors = a.summary.byMethod["WEBSOCKET_ERROR"] || 0;
           return (
             <div key={k.key} className="p-4 rounded-xl bg-white/60 border border-white/20 shadow mb-6">
               <div className="flex items-center justify-between mb-2">
@@ -166,43 +139,31 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
               {/* Usage Analytics Section */}
               <div className="mt-4 rounded-xl bg-white/80 backdrop-blur-xl border border-white/30 shadow p-4">
                 <h3 className="text-lg font-bold mb-2 heading-orbitron">Usage Analytics</h3>
-                {!a ? (
-                  <div className="text-gray-500">Loading analytics…</div>
-                ) : (
-                  <div className="space-y-2">
-                    {(() => {
-                      const extended = a as Partial<ExtendedAnalytics>;
-                      const s: AnalyticsSummary = extended.summary !== undefined ? extended.summary : (a as AnalyticsSummary);
-                      return (
-                        <>
-                          <div className="text-xs">Total requests: <span className="font-mono font-bold">{s.total}</span></div>
-                          <div className="text-xs">Errors: <span className="font-mono font-bold">{s.errors}</span></div>
-                          <div className="text-xs">Avg response time: <span className="font-mono font-bold">{s.avgDuration.toFixed(1)} ms</span></div>
-                          <div className="text-xs">Requests by method:</div>
-                          <ul className="text-xs ml-4">
-                            {Object.entries(s.byMethod).map(([m, c]) => (
-                              <li key={m}>{m}: <span className="font-mono">{c}</span></li>
-                            ))}
-                          </ul>
-                          <div className="text-xs">Requests by network:</div>
-                          <ul className="text-xs ml-4">
-                            {Object.entries(s.byNetwork).map(([n, c]) => (
-                              <li key={n}>{n}: <span className="font-mono">{c}</span></li>
-                            ))}
-                          </ul>
-                          <div className="text-xs">Last 10 requests:</div>
-                          <ul className="text-xs ml-4">
-                            {s.recent.map((r, i) => (
-                              <li key={i}>
-                                {new Date(r.timestamp).toLocaleString()} — <span className="font-mono">{r.method}</span> — <span className={r.success ? "text-green-600" : "text-red-600"}>{r.success ? "✔" : "✖"}</span> — <span className="font-mono">{r.durationMs} ms</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      );
-                    })()}
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <div className="text-xs">Total requests: <span className="font-mono font-bold">{a.summary.total}</span></div>
+                  <div className="text-xs">Errors: <span className="font-mono font-bold">{a.summary.errors}</span></div>
+                  <div className="text-xs">Avg response time: <span className="font-mono font-bold">{a.summary.avgDuration.toFixed(1)} ms</span></div>
+                  <div className="text-xs">Requests by method:</div>
+                  <ul className="text-xs ml-4">
+                    {Object.entries(a.summary.byMethod).map(([m, c]) => (
+                      <li key={m}>{m}: <span className="font-mono">{c}</span></li>
+                    ))}
+                  </ul>
+                  <div className="text-xs">Requests by network:</div>
+                  <ul className="text-xs ml-4">
+                    {Object.entries(a.summary.byNetwork).map(([n, c]) => (
+                      <li key={n}>{n}: <span className="font-mono">{c}</span></li>
+                    ))}
+                  </ul>
+                  <div className="text-xs">Last 10 requests:</div>
+                  <ul className="text-xs ml-4">
+                    {a.summary.recent.map((r, i) => (
+                      <li key={i}>
+                        {new Date(r.timestamp).toLocaleString()} — <span className="font-mono">{r.method}</span> — <span className={r.success ? "text-green-600" : "text-red-600"}>{r.success ? "✔" : "✖"}</span> — <span className="font-mono">{r.durationMs} ms</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
               {/* WebSocket Activity Section */}

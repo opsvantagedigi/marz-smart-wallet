@@ -1,3 +1,6 @@
+import { SolanaTier, SolanaTierConfig, SOLANA_TIER_CONFIG } from "./solanaApiKeyStore";
+import { AnalyticsSummary, UsageMetrics, UsageBundle, SolanaAnalyticsPayload } from "./analyticsTypes";
+
 type SolanaLogEntry = {
   key: string;
   timestamp: number;
@@ -17,7 +20,7 @@ export function getLogsForKey(key: string) {
   return logs.filter(l => l.key === key);
 }
 
-export function getSummaryForKey(key: string) {
+export function getSummaryForKey(key: string): AnalyticsSummary {
   const entries = getLogsForKey(key);
   const total = entries.length;
   const errors = entries.filter(e => !e.success).length;
@@ -88,6 +91,45 @@ export function incrementWsUsage(key: string, count = 1) {
   u.wsMessages += count;
 }
 
-export function getUsageForKey(key: string): SolanaUsageCounters | undefined {
+export function getUsageForKey(key: string): SolanaUsageCounters {
   return getOrInitUsage(key);
+}
+
+// --- Builders for strongly-typed analytics payloads
+export function buildUsageMetrics(used: number, limit: number): UsageMetrics {
+  const remaining = Number.isFinite(limit) ? Math.max(0, limit - used) : Number.POSITIVE_INFINITY;
+  const usagePercent = Number.isFinite(limit) ? used / Math.max(1, limit) : 0;
+  return { used, limit, remaining, usagePercent };
+}
+
+export function buildUsageBundle(key: string, tierConfig: SolanaTierConfig): UsageBundle {
+  const usage = getOrInitUsage(key);
+  const httpUsed = usage.httpRequests;
+  const wsUsed = usage.wsMessages;
+  const httpLimit = tierConfig.monthlyRequestLimit;
+  const wsLimit = tierConfig.monthlyWsMessageLimit;
+  return {
+    http: buildUsageMetrics(httpUsed, httpLimit),
+    ws: buildUsageMetrics(wsUsed, wsLimit),
+  };
+}
+
+/**
+ * Assemble a SolanaAnalyticsPayload for the API.
+ * - `key` is the API key string
+ * - `tier` is the tier id (e.g., "free") for the key
+ * - `keyRecord` is the key object from the key store (used for future fields)
+ * - `summary` is optional; if omitted we compute it from logs
+ */
+export function buildAnalyticsPayload(key: string, tier: SolanaTier, keyRecord: any, summary?: AnalyticsSummary): SolanaAnalyticsPayload {
+  const tierConfig = SOLANA_TIER_CONFIG[tier] as SolanaTierConfig;
+  const s = summary ?? getSummaryForKey(key);
+  const usage = buildUsageBundle(key, tierConfig);
+  return {
+    tier,
+    tierName: tierConfig.name,
+    usage,
+    summary: s,
+    timestamp: Date.now(),
+  };
 }

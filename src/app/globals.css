@@ -11,16 +11,9 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-}
-
-/* Starry cosmic background on body */
-body {
-  background-image: url("https://raw.githubusercontent.com/ajaysidal/starry-assets/main/starfield.svg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  background-color: #000000;
+  /* Restore clean neutral background and readable text color */
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  color: #0f172a; /* text-slate-900 */
 }
 
 /* Responsive font size */
