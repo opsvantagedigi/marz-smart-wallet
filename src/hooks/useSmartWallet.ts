@@ -9,11 +9,15 @@ export function useSmartWallet() {
 
   useEffect(() => {
     async function init() {
-      const c = getSmartWalletClient();
-      setClient(c);
+      try {
+        const c = await getSmartWalletClient();
+        setClient(c);
 
-      const addr = await c.getAddress();
-      setAddress(addr);
+        const addr = await c.getAddress();
+        setAddress(addr);
+      } catch (error) {
+        console.error("Failed to initialize wallet:", error);
+      }
     }
     init();
   }, []);

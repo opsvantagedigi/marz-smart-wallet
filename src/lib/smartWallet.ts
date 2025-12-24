@@ -1,32 +1,25 @@
-import { createSmartAccountClient } from "@alchemy/aa-core";
+"use client";
+
+import { createModularAccountAlchemyClient } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
-import { AlchemyProvider } from "@alchemy/aa-ethers";
+import { sepolia } from "@alchemy/aa-core";
 
-export function getSmartWalletClient() {
-  const apiKey = process.env.ALCHEMY_WALLET_API_KEY!;
-  const appId = process.env.ALCHEMY_WALLET_APP_ID!;
-  const bundlerKey = process.env.ALCHEMY_BUNDLER_API_KEY!;
-  const gasPolicy = process.env.ALCHEMY_GAS_MANAGER_POLICY_ID!;
+export async function getSmartWalletClient() {
+  const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!;
+  const policyId = process.env.NEXT_PUBLIC_ALCHEMY_POLICY_ID!;
 
-  const provider = new AlchemyProvider({
-    apiKey,
-    chain: "base-mainnet", // default chain for MARZ
-  });
-
-  const signer = LocalAccountSigner.privateKeyToAccountSigner(
-    process.env.ALCHEMY_WALLET_PRIVATE_KEY!
+  // For demo purposes, generate a random signer
+  // In production, this should be derived from user authentication
+  const signer = LocalAccountSigner.mnemonicToAccountSigner(
+    "test test test test test test test test test test test junk"
   );
 
-  return createSmartAccountClient({
+  return createModularAccountAlchemyClient({
+    apiKey,
+    chain: sepolia,
     signer,
-    chain: provider.chain,
-    rpcClient: provider,
     gasManagerConfig: {
-      policyId: gasPolicy,
-    },
-    opts: {
-      txMaxRetries: 3,
-      txRetryIntervalMs: 1500,
+      policyId,
     },
   });
 }

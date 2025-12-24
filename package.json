@@ -11,6 +11,7 @@
     "vercel:deploy": "vercel --prod --confirm"
   },
   "dependencies": {
+    "@alchemy/aa-alchemy": "^3.19.0",
     "@alchemy/aa-core": "^3.19.0",
     "@alchemy/aa-ethers": "^3.19.0",
     "@fontsource/inter": "^5.2.8",
