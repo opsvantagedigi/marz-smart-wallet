@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Zap,
   Lock,
@@ -50,9 +51,9 @@ export default function Home() {
 
           <Reveal delay={160}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <button className="px-8 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm sm:text-base hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
+              <Link href="/dashboard" className="px-8 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm sm:text-base hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
                 Get Started
-              </button>
+              </Link>
               <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg backdrop-blur-xl bg-white/5 border-2 border-[#00BFFF]/40 text-white font-bold font-orbitron text-sm sm:text-base md:text-lg hover:bg-white/10 hover:border-[#00BFFF]/70 hover:scale-105 transition-all duration-300 flex items-center gap-2">
                 View Pricing
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -616,9 +617,9 @@ export default function Home() {
                 Join thousands of crypto users who trust Marz with their digital
                 assets.
               </p>
-              <button className="px-8 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm sm:text-base hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
+              <Link href="/dashboard" className="inline-block px-8 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm sm:text-base hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
                 Launch App Now
-              </button>
+              </Link>
             </GlassCard>
           </Reveal>
         </div>

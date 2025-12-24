@@ -1,9 +1,20 @@
 "use client";
 
 import { useSmartWallet } from "@/hooks/useSmartWallet";
+import { getWalletConnect } from "@/lib/walletconnect";
 
 export default function DashboardPage() {
   const { client, address } = useSmartWallet();
+
+  async function connectExternalWallet() {
+    try {
+      const wc = await getWalletConnect();
+      await wc.connect();
+      alert("External wallet connected!");
+    } catch (error) {
+      console.error("WalletConnect error:", error);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-black via-[#001a1a] to-[#003333] py-20 px-4">
@@ -27,9 +38,17 @@ export default function DashboardPage() {
         )}
 
         {address && (
-          <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
-            <h2 className="font-orbitron text-xl mb-2">Your Smart Wallet is Ready</h2>
-            <p className="text-white/70 font-inter break-all">{address}</p>
+          <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white space-y-4">
+            <div>
+              <h2 className="font-orbitron text-xl mb-2">Your Smart Wallet is Ready</h2>
+              <p className="text-white/70 font-inter break-all">{address}</p>
+            </div>
+            <button
+              onClick={connectExternalWallet}
+              className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 text-white font-inter text-sm transition-all"
+            >
+              Connect External Wallet (WalletConnect)
+            </button>
           </div>
         )}
 
