@@ -20,7 +20,7 @@ export default function DashboardPage() {
   const [nfts, setNfts] = useState<any>(null);
   const [activity, setActivity] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(false);
-  const [selectedChain, setSelectedChain] = useState("base-mainnet");
+  const [selectedChain, setSelectedChain] = useState("marz-mainnet"); // Default to MARZ Network
 
   useEffect(() => {
     // Check wallet connection using centralized state
@@ -99,11 +99,18 @@ export default function DashboardPage() {
         <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white space-y-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h2 className="font-orbitron text-xl mb-2">
-                {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
-              </h2>
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="font-orbitron text-xl">
+                  {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
+                </h2>
+                {selectedChain === "marz-mainnet" && (
+                  <span className="px-2 py-1 rounded-full bg-gradient-to-r from-[#007F7F] to-[#00BFFF] text-xs font-orbitron">
+                    🚀 MARZ Network
+                  </span>
+                )}
+              </div>
               <p className="text-white/70 font-inter text-sm mb-2">
-                Type: {walletType === "smart" ? "Alchemy Smart Account" : "WalletConnect / External"}
+                Type: {walletType === "smart" ? "Alchemy Smart Account on MARZ" : "WalletConnect / External"}
               </p>
               {walletAddress && (
                 <p className="text-white/70 break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
@@ -138,6 +145,29 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
+
+        {/* MARZ Network Warning for Smart Wallets */}
+        {walletType === "smart" && selectedChain !== "marz-mainnet" && (
+          <div className="p-4 rounded-xl bg-yellow-900/40 border border-yellow-500/50 text-yellow-100">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div>
+                <h3 className="font-orbitron text-sm font-semibold mb-1">
+                  Smart Wallet Network Warning
+                </h3>
+                <p className="text-xs text-yellow-200/80">
+                  Your Smart Wallet is deployed on MARZ Network. Switch to MARZ Network for optimal performance and to access your full wallet features.
+                </p>
+                <button
+                  onClick={() => setSelectedChain("marz-mainnet")}
+                  className="mt-2 px-3 py-1 rounded bg-yellow-500 text-black text-xs font-semibold hover:bg-yellow-400 transition-colors"
+                >
+                  Switch to MARZ Network
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Dashboard Content */}
         <div className="space-y-6">

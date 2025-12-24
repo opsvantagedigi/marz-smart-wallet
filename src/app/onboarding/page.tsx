@@ -80,11 +80,14 @@ export default function OnboardingPage() {
             </div>
             <h3 className="font-orbitron text-xl text-white mb-2">Smart Wallet</h3>
             <p className="text-white/60 font-inter text-sm mb-4">
-              Sign in with email or social accounts. Gasless transactions included.
+              Sign in with email or social accounts. Deployed on MARZ Network with gasless transactions.
             </p>
             <div className="flex flex-wrap gap-2">
               <span className="px-2 py-1 rounded bg-green-400/20 text-green-400 text-xs font-inter">
                 Recommended
+              </span>
+              <span className="px-2 py-1 rounded bg-gradient-to-r from-[#007F7F]/20 to-[#00BFFF]/20 text-[#00BFFF] text-xs font-inter border border-[#00BFFF]/30">
+                🚀 MARZ Network
               </span>
               <span className="px-2 py-1 rounded bg-white/10 text-white/60 text-xs font-inter">
                 No seed phrase

@@ -2,6 +2,7 @@
 
 export function ChainSelector({ chain, setChain }: any) {
   const chains = [
+    { id: "marz-mainnet", label: "MARZ Network", emoji: "🚀" },
     { id: "base-mainnet", label: "Base", emoji: "🔵" },
     { id: "eth-mainnet", label: "Ethereum", emoji: "⟠" },
     { id: "polygon-mainnet", label: "Polygon", emoji: "🟣" },
