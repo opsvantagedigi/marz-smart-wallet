@@ -1,6 +1,13 @@
-import { NextResponse } from "next/server";
+import type { MetadataRoute } from "next";
 
-type SitemapEntry = { path: string; lastModified: Date; changeFrequency: string; priority: number };
+type SitemapEntry = {
+  path: string;
+  lastModified: Date;
+  changeFrequency: string;
+  priority: number;
+};
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://opsvantagedigital.online";
 
 const ENTRIES: SitemapEntry[] = [
   { path: "/", lastModified: new Date(), changeFrequency: "daily", priority: 1.0 },
@@ -8,28 +15,22 @@ const ENTRIES: SitemapEntry[] = [
   { path: "/rpc", lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
 ];
 
-function formatUrl(e: SitemapEntry) {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+function formatUrl(entry: SitemapEntry) {
   return [
-    '<url>',
-    `  <loc>${new URL(e.path, base).toString()}</loc>`,
-    `  <lastmod>${e.lastModified.toISOString()}</lastmod>`,
-    `  <changefreq>${e.changeFrequency}</changefreq>`,
-    `  <priority>${e.priority.toFixed(1)}</priority>`,
-    '</url>'
+    "<url>",
+    `  <loc>${new URL(entry.path, BASE_URL).toString()}</loc>`,
+    `  <lastmod>${entry.lastModified.toISOString()}</lastmod>`,
+    `  <changefreq>${entry.changeFrequency}</changefreq>`,
+    `  <priority>${entry.priority.toFixed(1)}</priority>`,
+    "</url>"
   ].join("\n");
 }
 
-export async function GET() {
-  const urls = ENTRIES.map(formatUrl).join("\n");
-  const xml = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    urls,
-    '</urlset>'
-  ].join("\n");
-  return new NextResponse(xml, { headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
+export default function sitemap(): MetadataRoute.Sitemap {
+  return ENTRIES.map(entry => ({
+    url: new URL(entry.path, BASE_URL).toString(),
+    lastModified: entry.lastModified,
+    changeFrequency: entry.changeFrequency,
+    priority: entry.priority
+  }));
 }
-
-
-export default GET;
