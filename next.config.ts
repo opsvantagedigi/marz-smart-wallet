@@ -1,38 +1,37 @@
-// next.config.ts
 import type { NextConfig } from "next";
+
 let webpack: any;
 try {
-  // use require to avoid TypeScript compile error when package is not installed
+  // safe require to avoid TS errors when webpack isn't installed
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   webpack = require("webpack");
 } catch {
-  // provide a minimal fallback so server-side build won't crash when webpack isn't present
   webpack = { IgnorePlugin: class {} };
 }
-let TerserPlugin: any;
-try {
-  // use require to avoid TypeScript compile error when package is not installed
-  // (Next.js may already handle minification for production builds)
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  TerserPlugin = require("terser-webpack-plugin");
-} catch {
-  TerserPlugin = undefined;
+
+const experimental: Record<string, any> = {
+  optimizePackageImports: ["lucide-react", "lodash-es"],
+  serverActions: {
+    allowedOrigins: [
+      "localhost:3000",
+      "opsvantagedigital.online",
+      "www.opsvantagedigital.online",
+    ],
+  },
+};
+
+if (process.env.NEXT_ENABLE_URL_IMPORTS === "1") {
+  experimental.urlImports = ["https://"];
 }
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
+  swcMinify: true,
   compress: true,
-
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
-
   async headers() {
     return [
       {
@@ -40,71 +39,30 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-          {
-            key: "Permissions-Policy",
-            value:
-              "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
-          },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
         ],
       },
     ];
   },
-
-  experimental: {
-    urlImports: ["https://"],
-    optimizePackageImports: ["lucide-react", "lodash-es"],
-    serverActions: {
-      allowedOrigins: [
-        "localhost:3000",
-        "opsvantagedigital.online",
-        "www.opsvantagedigital.online",
-      ],
-    },
-  },
-
-  // Keep an (empty) Turbopack config to avoid build-time errors when a custom
-  // webpack configuration is present. This tells Next to proceed with Turbopack.
+  experimental,
   turbopack: {},
-
   webpack: (config, { isServer }) => {
-    // Ignore moment.js locales if ever used (bundle size)
     config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^\.\/locale$/,
-        contextRegExp: /moment$/,
-      })
+      new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ })
     );
-
-    // Allow top-level await if needed
-    config.experiments = {
-      ...config.experiments,
-      topLevelAwait: true,
-    };
-
-    // Strip console.* in client bundles for production
+    config.experiments = { ...(config.experiments || {}), topLevelAwait: true };
     if (!isServer) {
       config.optimization = config.optimization || {};
       try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const TerserPlugin = require("terser-webpack-plugin");
-        config.optimization.minimizer = [
-          new TerserPlugin({
-            terserOptions: {
-              compress: { drop_console: true },
-            },
-          }),
-        ];
-      } catch (e) {
-        // terser-webpack-plugin may not be available in the build environment;
-        // fall back to enabling default minimization
+        config.optimization.minimizer = [new TerserPlugin({ terserOptions: { compress: { drop_console: true } } })];
+      } catch {
         config.optimization.minimize = true;
       }
     }
-
     return config;
   },
 };

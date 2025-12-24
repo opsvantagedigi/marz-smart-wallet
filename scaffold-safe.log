@@ -1,0 +1,8 @@
+WROTE: next.config.ts
+WROTE: middleware.ts
+WROTE: public/robots.txt
+WROTE: src/app/sitemap.ts
+WROTE: src/app/api/solana-rpc/route.ts
+WROTE: src/app/api/stats/route.ts
+WROTE: Dockerfile
+SCaffold finished. If any writes failed you will see ERROR lines above.
