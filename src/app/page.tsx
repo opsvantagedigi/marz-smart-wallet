@@ -50,7 +50,7 @@ export default function Home() {
 
           <Reveal delay={160}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-bold font-orbitron text-sm sm:text-base md:text-lg hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 transition-all duration-300">
+              <button className="px-8 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm sm:text-base hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
                 Get Started
               </button>
               <button className="px-7 sm:px-9 py-3 sm:py-4 rounded-lg backdrop-blur-xl bg-white/5 border-2 border-[#00BFFF]/40 text-white font-bold font-orbitron text-sm sm:text-base md:text-lg hover:bg-white/10 hover:border-[#00BFFF]/70 hover:scale-105 transition-all duration-300 flex items-center gap-2">
@@ -111,13 +111,15 @@ export default function Home() {
     return (
       <section
         id="benefits"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            title="Why Choose Marz?"
-            subtitle="Built for the next generation of crypto users"
-          />
+          <Reveal>
+            <SectionHeader
+              title="Why Choose Marz?"
+              subtitle="Built for the next generation of crypto users"
+            />
+          </Reveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((benefit, idx) => {
               const Icon = benefit.icon;
@@ -125,7 +127,7 @@ export default function Home() {
                 <Reveal key={benefit.title} delay={idx * 80}>
                   <GlassCard className="p-6 hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105 group">
                     <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-cyan-400 mb-4 group-hover:scale-110 transition-transform" />
-                    <h3 className="text-lg sm:text-xl font-bold mb-2">
+                    <h3 className="text-lg sm:text-xl font-bold font-orbitron mb-2">
                       {benefit.title}
                     </h3>
                     <p className="text-white/70 text-sm sm:text-base font-inter">
@@ -155,13 +157,15 @@ export default function Home() {
     return (
       <section
         id="features"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            title="Powerful Features"
-            subtitle="Everything you need to manage your digital assets"
-          />
+          <Reveal>
+            <SectionHeader
+              title="Powerful Features"
+              subtitle="Everything you need to manage your digital assets"
+            />
+          </Reveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, idx) => (
               <Reveal key={feature} delay={idx * 80}>
@@ -169,7 +173,7 @@ export default function Home() {
                   <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
                     <CheckCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold font-inter text-white">
+                  <h3 className="text-lg sm:text-xl font-bold font-orbitron text-white">
                     {feature}
                   </h3>
                 </GlassCard>
@@ -204,13 +208,15 @@ export default function Home() {
     return (
       <section
         id="how-it-works"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            title="How It Works"
-            subtitle="Three simple steps to get started"
-          />
+          <Reveal>
+            <SectionHeader
+              title="How It Works"
+              subtitle="Three simple steps to get started"
+            />
+          </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, idx) => (
               <Reveal key={step.title} delay={idx * 100}>
@@ -221,7 +227,7 @@ export default function Home() {
                         {step.num}
                       </span>
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold font-orbitron mb-2">
                       {step.title}
                     </h3>
                     <p className="text-white/70 font-inter text-sm sm:text-base">
@@ -294,13 +300,15 @@ export default function Home() {
     return (
       <section
         id="pricing"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            title="Simple, Transparent Pricing"
-            subtitle="Choose the plan that works for you"
-          />
+          <Reveal>
+            <SectionHeader
+              title="Simple, Transparent Pricing"
+              subtitle="Choose the plan that works for you"
+            />
+          </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {tiers.map((tier, idx) => (
               <Reveal key={tier.name} delay={idx * 80}>
@@ -391,13 +399,15 @@ export default function Home() {
     return (
       <section
         id="faq"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-3xl mx-auto">
-          <SectionHeader
-            title="Frequently Asked Questions"
-            subtitle="Have questions? We have answers."
-          />
+          <Reveal>
+            <SectionHeader
+              title="Frequently Asked Questions"
+              subtitle="Have questions? We have answers."
+            />
+          </Reveal>
           <div className="space-y-4">
             {faqs.map((faq, idx) => (
               <Reveal key={faq.q} delay={idx * 80}>
@@ -408,7 +418,7 @@ export default function Home() {
                     }
                     className="w-full px-6 py-4 flex items-center justify-between hover:bg-white/10 transition-all text-left"
                   >
-                    <h3 className="font-bold text-white text-base sm:text-lg">
+                    <h3 className="font-bold font-orbitron text-white text-base sm:text-lg">
                       {faq.q}
                     </h3>
                     <ChevronDown
@@ -487,13 +497,15 @@ export default function Home() {
     return (
       <section
         id="comparison"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
-          <SectionHeader
-            title="How Marz Compares"
-            subtitle="See why Marz stands out from the competition"
-          />
+          <Reveal>
+            <SectionHeader
+              title="How Marz Compares"
+              subtitle="See why Marz stands out from the competition"
+            />
+          </Reveal>
           <Reveal>
             <div className="hidden lg:block overflow-x-auto">
               <GlassCard className="p-4">
@@ -592,19 +604,19 @@ export default function Home() {
     return (
       <section
         id="cta"
-        className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-2xl mx-auto">
           <Reveal>
             <GlassCard className="p-8 sm:p-12 text-center border-cyan-400/40 bg-gradient-to-br from-black/40 via-black/60 to-cyan-900/10">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-orbitron mb-4">
                 Ready to Experience the Future?
               </h2>
               <p className="text-white/70 font-inter text-base sm:text-lg mb-8">
                 Join thousands of crypto users who trust Marz with their digital
                 assets.
               </p>
-              <button className="px-8 sm:px-12 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-bold font-orbitron text-base sm:text-lg hover:shadow-2xl hover:shadow-cyan-400/50 hover:scale-105 transition-all duration-300">
+              <button className="px-8 py-3 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm sm:text-base hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/50">
                 Launch App Now
               </button>
             </GlassCard>

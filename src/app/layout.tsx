@@ -20,14 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="font-inter text-white">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      {/* IMPORTANT: no bg-* class here; background comes from body in globals.css */}
+      <body className="font-inter">
         <ThemeProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1 pt-16 pb-24">
-              {children}
-            </main>
+            <main className="flex-1 pt-16 pb-24">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>
