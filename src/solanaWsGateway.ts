@@ -1,6 +1,5 @@
-wss.on("connection", (client, req) => {
-
-import WebSocket, { WebSocketServer } from "ws";
+import WebSocket from "ws";
+const WebSocketServer = WebSocket.Server;
 import { IncomingMessage } from "http";
 import { getKey } from "./lib/solanaApiKeyStore";
 import { addLog } from "./lib/solanaAnalyticsStore";
@@ -48,7 +47,7 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       open = true;
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CONNECTION", network, success: true, durationMs: 0 });
     });
-    upstream.on("message", (data: WebSocket.RawData) => {
+    upstream.on("message", (data: import("ws").Data) => {
       if (client.readyState === client.OPEN) {
         client.send(data);
       }
@@ -61,7 +60,7 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_ERROR", network, success: false, durationMs: 0 });
       if (client.readyState === client.OPEN) client.close(1011, "Upstream error");
     });
-    client.on("message", (data: WebSocket.RawData) => {
+    client.on("message", (data: import("ws").Data) => {
       if (open && upstream.readyState === upstream.OPEN) {
         upstream.send(data);
         addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_MESSAGE", network, success: true, durationMs: 0 });
