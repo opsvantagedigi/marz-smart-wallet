@@ -1,19 +1,17 @@
-import { WebSocketServer, WebSocket } from "ws";
+wss.on("connection", (client, req) => {
+
+import WebSocket, { WebSocketServer } from "ws";
+import { IncomingMessage } from "http";
 import { getKey } from "./lib/solanaApiKeyStore";
 import { addLog } from "./lib/solanaAnalyticsStore";
 
 const PORT = parseInt(process.env.SOLANA_WS_GATEWAY_PORT || "8081");
-const UPSTREAMS = {
-  devnet: process.env.SOLANA_UPSTREAM_DEVNET_WS!,
-  mainnet: process.env.SOLANA_UPSTREAM_MAINNET_WS!,
-};
-
-const wss = new WebSocketServer({ port: PORT });
 
 console.log(`[SolanaWS] Gateway listening on port ${PORT}`);
 
-wss.on("connection", (client, req) => {
-  import type { IncomingMessage } from "http";
+const wss = new WebSocketServer({ port: PORT });
+
+wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
   try {
     const url = new URL(req.url || "", `ws://${req.headers.host}`);
     const pathParts = url.pathname.split("/").filter(Boolean);
@@ -36,7 +34,10 @@ wss.on("connection", (client, req) => {
       client.close(4003, "Starter tier only supports devnet");
       return;
     }
-    const upstreamUrl = UPSTREAMS[network];
+    const upstreamUrl =
+      network === "mainnet"
+        ? process.env.SOLANA_UPSTREAM_MAINNET_WS!
+        : process.env.SOLANA_UPSTREAM_DEVNET_WS!;
     if (!upstreamUrl) {
       client.close(4002, "Invalid network");
       return;
@@ -47,7 +48,7 @@ wss.on("connection", (client, req) => {
       open = true;
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CONNECTION", network, success: true, durationMs: 0 });
     });
-    upstream.on("message", (data) => {
+    upstream.on("message", (data: WebSocket.RawData) => {
       if (client.readyState === client.OPEN) {
         client.send(data);
       }
@@ -56,11 +57,11 @@ wss.on("connection", (client, req) => {
       if (client.readyState === client.OPEN) client.close();
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CLOSE", network, success: true, durationMs: 0 });
     });
-    upstream.on("error", (err) => {
+    upstream.on("error", (err: Error) => {
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_ERROR", network, success: false, durationMs: 0 });
       if (client.readyState === client.OPEN) client.close(1011, "Upstream error");
     });
-    client.on("message", (data) => {
+    client.on("message", (data: WebSocket.RawData) => {
       if (open && upstream.readyState === upstream.OPEN) {
         upstream.send(data);
         addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_MESSAGE", network, success: true, durationMs: 0 });
@@ -70,7 +71,7 @@ wss.on("connection", (client, req) => {
       if (upstream.readyState === upstream.OPEN) upstream.close();
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CLOSE", network, success: true, durationMs: 0 });
     });
-    client.on("error", (err) => {
+    client.on("error", (err: Error) => {
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_ERROR", network, success: false, durationMs: 0 });
     });
   } catch (err) {

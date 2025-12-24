@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getKey, resetIfNeeded, incrementUsage, getUsage, RATE_LIMITS } from "@/lib/solanaApiKeyStore";
 import { addLog } from "@/lib/solanaAnalyticsStore";
-  const start = Date.now();
 
 const NETWORKS = {
   devnet: process.env.SOLANA_UPSTREAM_DEVNET_RPC!,
   mainnet: process.env.SOLANA_UPSTREAM_MAINNET_RPC!,
 };
 
+export async function POST(req: NextRequest) {
+  const start = Date.now();
   const apiKey = req.headers.get("x-api-key");
   if (!apiKey) return NextResponse.json({ error: "Missing API key" }, { status: 401 });
   const keyObj = getKey(apiKey);
