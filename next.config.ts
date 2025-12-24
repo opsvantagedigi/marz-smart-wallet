@@ -1,4 +1,3 @@
-import type { NextConfig } from "next";
 
 let webpack: any;
 try {
