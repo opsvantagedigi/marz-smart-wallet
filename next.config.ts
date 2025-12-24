@@ -67,6 +67,10 @@ const nextConfig: NextConfig = {
     },
   },
 
+  // Keep an (empty) Turbopack config to avoid build-time errors when a custom
+  // webpack configuration is present. This tells Next to proceed with Turbopack.
+  turbopack: {},
+
   webpack: (config, { isServer }) => {
     // Ignore moment.js locales if ever used (bundle size)
     config.plugins.push(
