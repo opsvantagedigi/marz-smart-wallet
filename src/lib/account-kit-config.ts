@@ -3,10 +3,9 @@
 import { AlchemyAccountsUIConfig, createConfig } from "@account-kit/react";
 import { alchemy } from "@account-kit/infra";
 import { QueryClient } from "@tanstack/react-query";
-import type { Chain } from "@account-kit/infra";
 
 // MARZ Network Chain Definition
-export const marzChain: Chain = {
+export const marzChain = {
   id: 99999, // MARZ Chain ID
   name: "MARZ Network",
   rpcUrls: {
@@ -28,7 +27,7 @@ export const marzChain: Chain = {
       url: "https://explorer.marz.network",
     },
   },
-};
+} as const;
 
 const uiConfig: AlchemyAccountsUIConfig = {
   illustrationStyle: "outline",
