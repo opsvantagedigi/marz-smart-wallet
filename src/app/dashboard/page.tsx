@@ -69,7 +69,7 @@ export default function DashboardPage() {
               Type: {walletType === "smart" ? "Alchemy Smart Account (Setup Required)" : "WalletConnect / External"}
             </p>
             {walletAddress && (
-              <p className="text-white/70 font-inter break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
+              <p className="text-white/70 break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
                 {walletAddress}
               </p>
             )}
