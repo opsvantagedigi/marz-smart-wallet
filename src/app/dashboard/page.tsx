@@ -10,7 +10,6 @@ import { NFTGrid } from "@/components/dashboard/NFTGrid";
 import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
 import { ChainSelector } from "@/components/dashboard/ChainSelector";
 import { TokenCardSkeleton, NFTSkeleton, ActivitySkeleton } from "@/components/dashboard/Skeleton";
-import WalletConnectPanel from "@/components/WalletConnect";
 
 // TODO: Update MARZ RPC + Chain ID once rollup provisioning completes.
 
@@ -65,7 +64,7 @@ export default function DashboardPage() {
 
   if (isLoading || walletType === "none") {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-black via-[#001a1a] to-[#003333] py-20 px-4">
+      <main className="min-h-screen py-20 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center mb-12">
             <h1 className="font-orbitron text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] bg-clip-text text-transparent mb-4">
@@ -86,7 +85,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-[#001a1a] to-[#003333] py-20 px-4">
+    <main className="min-h-screen py-20 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -228,9 +227,6 @@ export default function DashboardPage() {
               <ActivityTimeline activity={activity} />
             )}
           </SectionCard>
-
-          {/* Wallet Access Panel */}
-          <WalletConnectPanel />
         </div>
       </div>
     </main>

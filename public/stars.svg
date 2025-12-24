@@ -1,0 +1,136 @@
+<svg
+  width="1920"
+  height="1080"
+  viewBox="0 0 1920 1080"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="spaceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />   <!-- slate-950-ish -->
+      <stop offset="40%" stop-color="#02041b" />
+      <stop offset="70%" stop-color="#020617" />
+      <stop offset="100%" stop-color="#000814" />
+    </linearGradient>
+
+    <!-- Star glow -->
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e5f4ff" stop-opacity="1" />
+      <stop offset="40%" stop-color="#e5f4ff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#e5f4ff" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Twinkling animation -->
+    <style>
+      @keyframes twinkle {
+        0% { opacity: 0.4; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.5); }
+        100% { opacity: 0.4; transform: scale(1); }
+      }
+      .star {
+        animation-name: twinkle;
+        animation-iteration-count: infinite;
+        transform-origin: center;
+      }
+      .star-slow {
+        animation-duration: 5.5s;
+        animation-timing-function: ease-in-out;
+      }
+      .star-medium {
+        animation-duration: 4s;
+        animation-timing-function: ease-in-out;
+      }
+      .star-fast {
+        animation-duration: 2.8s;
+        animation-timing-function: ease-in-out;
+      }
+    </style>
+  </defs>
+
+  <!-- Space background -->
+  <rect width="1920" height="1080" fill="url(#spaceGradient)" />
+
+  <!-- Soft nebula glow areas -->
+  <circle cx="300" cy="200" r="260" fill="url(#starGlow)" opacity="0.22" />
+  <circle cx="1600" cy="260" r="300" fill="url(#starGlow)" opacity="0.18" />
+  <circle cx="1100" cy="800" r="260" fill="url(#starGlow)" opacity="0.20" />
+  <circle cx="420" cy="820" r="220" fill="url(#starGlow)" opacity="0.16" />
+
+  <!-- Static tiny stars -->
+  <g fill="#e5f4ff" opacity="0.85">
+    <circle cx="120" cy="140" r="1" />
+    <circle cx="260" cy="90" r="1.1" />
+    <circle cx="420" cy="180" r="0.9" />
+    <circle cx="640" cy="120" r="1.2" />
+    <circle cx="860" cy="80" r="0.9" />
+    <circle cx="1040" cy="160" r="1" />
+    <circle cx="1260" cy="110" r="1" />
+    <circle cx="1420" cy="190" r="1.1" />
+    <circle cx="1680" cy="130" r="1" />
+    <circle cx="1840" cy="200" r="0.9" />
+
+    <circle cx="200" cy="340" r="1" />
+    <circle cx="380" cy="280" r="1.1" />
+    <circle cx="560" cy="360" r="1" />
+    <circle cx="720" cy="300" r="0.9" />
+    <circle cx="940" cy="260" r="1.1" />
+    <circle cx="1140" cy="320" r="1" />
+    <circle cx="1320" cy="280" r="0.9" />
+    <circle cx="1500" cy="360" r="1.1" />
+    <circle cx="1720" cy="320" r="1" />
+
+    <circle cx="160" cy="540" r="1" />
+    <circle cx="360" cy="500" r="1.1" />
+    <circle cx="540" cy="560" r="0.9" />
+    <circle cx="760" cy="520" r="1" />
+    <circle cx="980" cy="580" r="1.1" />
+    <circle cx="1180" cy="520" r="1" />
+    <circle cx="1380" cy="560" r="0.9" />
+    <circle cx="1560" cy="520" r="1.1" />
+    <circle cx="1760" cy="580" r="1" />
+
+    <circle cx="220" cy="740" r="1" />
+    <circle cx="420" cy="700" r="1.1" />
+    <circle cx="620" cy="760" r="1" />
+    <circle cx="820" cy="720" r="0.9" />
+    <circle cx="1040" cy="780" r="1.1" />
+    <circle cx="1240" cy="720" r="1" />
+    <circle cx="1440" cy="760" r="0.9" />
+    <circle cx="1640" cy="720" r="1.1" />
+    <circle cx="1820" cy="780" r="1" />
+
+    <circle cx="180" cy="940" r="0.9" />
+    <circle cx="360" cy="900" r="1" />
+    <circle cx="540" cy="960" r="1.1" />
+    <circle cx="760" cy="920" r="1" />
+    <circle cx="960" cy="980" r="0.9" />
+    <circle cx="1180" cy="940" r="1.1" />
+    <circle cx="1380" cy="900" r="1" />
+    <circle cx="1560" cy="960" r="0.9" />
+    <circle cx="1760" cy="920" r="1" />
+  </g>
+
+  <!-- Animated stars -->
+  <g fill="#f8fafc">
+    <circle class="star star-slow" cx="260" cy="220" r="1.8" />
+    <circle class="star star-medium" cx="620" cy="180" r="1.6" />
+    <circle class="star star-fast" cx="980" cy="140" r="1.8" />
+    <circle class="star star-medium" cx="1420" cy="260" r="1.7" />
+    <circle class="star star-slow" cx="1720" cy="210" r="1.9" />
+
+    <circle class="star star-medium" cx="340" cy="460" r="1.7" />
+    <circle class="star star-fast" cx="720" cy="420" r="1.8" />
+    <circle class="star star-slow" cx="1120" cy="460" r="1.6" />
+    <circle class="star star-medium" cx="1540" cy="440" r="1.8" />
+
+    <circle class="star star-fast" cx="280" cy="680" r="1.9" />
+    <circle class="star star-medium" cx="680" cy="720" r="1.7" />
+    <circle class="star star-slow" cx="1040" cy="700" r="1.8" />
+    <circle class="star star-medium" cx="1460" cy="720" r="1.6" />
+
+    <circle class="star star-slow" cx="320" cy="900" r="1.7" />
+    <circle class="star star-fast" cx="780" cy="940" r="1.9" />
+    <circle class="star star-medium" cx="1200" cy="920" r="1.8" />
+    <circle class="star star-slow" cx="1640" cy="940" r="1.7" />
+  </g>
+</svg>
