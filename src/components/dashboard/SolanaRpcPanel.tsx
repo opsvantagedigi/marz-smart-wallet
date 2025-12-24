@@ -128,9 +128,11 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
           // WebSocket analytics
           let wsConnections = 0, wsMessages = 0, wsErrors = 0;
           if (a) {
-            wsConnections = (a.byMethod["WEBSOCKET_CONNECTION"] || 0) - (a.byMethod["WEBSOCKET_CLOSE"] || 0);
-            wsMessages = a.byMethod["WEBSOCKET_MESSAGE"] || 0;
-            wsErrors = a.byMethod["WEBSOCKET_ERROR"] || 0;
+            const extended = a as Partial<ExtendedAnalytics>;
+            const s: AnalyticsSummary = extended.summary !== undefined ? extended.summary : (a as AnalyticsSummary);
+            wsConnections = (s.byMethod["WEBSOCKET_CONNECTION"] || 0) - (s.byMethod["WEBSOCKET_CLOSE"] || 0);
+            wsMessages = s.byMethod["WEBSOCKET_MESSAGE"] || 0;
+            wsErrors = s.byMethod["WEBSOCKET_ERROR"] || 0;
           }
           return (
             <div key={k.key} className="p-4 rounded-xl bg-white/60 border border-white/20 shadow mb-6">
@@ -168,29 +170,37 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
                   <div className="text-gray-500">Loading analytics…</div>
                 ) : (
                   <div className="space-y-2">
-                    <div className="text-xs">Total requests: <span className="font-mono font-bold">{a.total}</span></div>
-                    <div className="text-xs">Errors: <span className="font-mono font-bold">{a.errors}</span></div>
-                    <div className="text-xs">Avg response time: <span className="font-mono font-bold">{a.avgDuration.toFixed(1)} ms</span></div>
-                    <div className="text-xs">Requests by method:</div>
-                    <ul className="text-xs ml-4">
-                      {Object.entries(a.byMethod).map(([m, c]) => (
-                        <li key={m}>{m}: <span className="font-mono">{c}</span></li>
-                      ))}
-                    </ul>
-                    <div className="text-xs">Requests by network:</div>
-                    <ul className="text-xs ml-4">
-                      {Object.entries(a.byNetwork).map(([n, c]) => (
-                        <li key={n}>{n}: <span className="font-mono">{c}</span></li>
-                      ))}
-                    </ul>
-                    <div className="text-xs">Last 10 requests:</div>
-                    <ul className="text-xs ml-4">
-                      {a.recent.map((r, i) => (
-                        <li key={i}>
-                          {new Date(r.timestamp).toLocaleString()} — <span className="font-mono">{r.method}</span> — <span className={r.success ? "text-green-600" : "text-red-600"}>{r.success ? "✔" : "✖"}</span> — <span className="font-mono">{r.durationMs} ms</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {(() => {
+                      const extended = a as Partial<ExtendedAnalytics>;
+                      const s: AnalyticsSummary = extended.summary !== undefined ? extended.summary : (a as AnalyticsSummary);
+                      return (
+                        <>
+                          <div className="text-xs">Total requests: <span className="font-mono font-bold">{s.total}</span></div>
+                          <div className="text-xs">Errors: <span className="font-mono font-bold">{s.errors}</span></div>
+                          <div className="text-xs">Avg response time: <span className="font-mono font-bold">{s.avgDuration.toFixed(1)} ms</span></div>
+                          <div className="text-xs">Requests by method:</div>
+                          <ul className="text-xs ml-4">
+                            {Object.entries(s.byMethod).map(([m, c]) => (
+                              <li key={m}>{m}: <span className="font-mono">{c}</span></li>
+                            ))}
+                          </ul>
+                          <div className="text-xs">Requests by network:</div>
+                          <ul className="text-xs ml-4">
+                            {Object.entries(s.byNetwork).map(([n, c]) => (
+                              <li key={n}>{n}: <span className="font-mono">{c}</span></li>
+                            ))}
+                          </ul>
+                          <div className="text-xs">Last 10 requests:</div>
+                          <ul className="text-xs ml-4">
+                            {s.recent.map((r, i) => (
+                              <li key={i}>
+                                {new Date(r.timestamp).toLocaleString()} — <span className="font-mono">{r.method}</span> — <span className={r.success ? "text-green-600" : "text-red-600"}>{r.success ? "✔" : "✖"}</span> — <span className="font-mono">{r.durationMs} ms</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
