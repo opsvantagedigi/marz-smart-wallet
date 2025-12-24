@@ -3,31 +3,7 @@
 import { AlchemyAccountsUIConfig, createConfig } from "@account-kit/react";
 import { alchemy } from "@account-kit/infra";
 import { QueryClient } from "@tanstack/react-query";
-
-// MARZ Network Chain Definition
-export const marzChain = {
-  id: 99999, // MARZ Chain ID
-  name: "MARZ Network",
-  rpcUrls: {
-    default: {
-      http: ["https://rpc.marz.network"],
-    },
-    public: {
-      http: ["https://rpc.marz.network"],
-    },
-  },
-  nativeCurrency: {
-    name: "MARZ",
-    symbol: "MARZ",
-    decimals: 18,
-  },
-  blockExplorers: {
-    default: {
-      name: "MARZ Explorer",
-      url: "https://explorer.marz.network",
-    },
-  },
-} as const;
+import { marzChain } from "./chains";
 
 const uiConfig: AlchemyAccountsUIConfig = {
   illustrationStyle: "outline",
@@ -63,7 +39,7 @@ const uiConfig: AlchemyAccountsUIConfig = {
 export const config = createConfig(
   {
     transport: alchemy({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
-    chain: marzChain, // Use MARZ Network instead of Base
+    chain: marzChain as any, // Use MARZ NeoSphere OP Stack chain
     ssr: false, // IMPORTANT: disable SSR for the onboarding page to avoid hydration issues
     enablePopupOauth: true,
   },

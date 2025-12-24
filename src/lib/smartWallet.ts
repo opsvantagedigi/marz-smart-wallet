@@ -2,25 +2,7 @@
 
 import { createModularAccountAlchemyClient } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
-
-// MARZ Network Chain Definition
-const marzChain = {
-  id: 99999,
-  name: "MARZ Network",
-  network: "marz",
-  nativeCurrency: {
-    name: "MARZ",
-    symbol: "MARZ",
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: { http: ["https://rpc.marz.network"] },
-    public: { http: ["https://rpc.marz.network"] },
-  },
-  blockExplorers: {
-    default: { name: "MARZ Explorer", url: "https://explorer.marz.network" },
-  },
-};
+import { marzChain } from "./chains";
 
 export async function getSmartWalletClient() {
   const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!;
@@ -34,7 +16,7 @@ export async function getSmartWalletClient() {
 
   return createModularAccountAlchemyClient({
     apiKey,
-    chain: marzChain as any, // Use MARZ Network
+    chain: marzChain as any, // Use MARZ NeoSphere OP Stack chain
     signer,
     gasManagerConfig: {
       policyId,

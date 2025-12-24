@@ -20,7 +20,7 @@ export default function DashboardPage() {
   const [nfts, setNfts] = useState<any>(null);
   const [activity, setActivity] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(false);
-  const [selectedChain, setSelectedChain] = useState("marz-mainnet"); // Default to MARZ Network
+  const [selectedChain, setSelectedChain] = useState("marz-neosphere"); // Default to MARZ NeoSphere
 
   useEffect(() => {
     // Check wallet connection using centralized state
@@ -103,14 +103,17 @@ export default function DashboardPage() {
                 <h2 className="font-orbitron text-xl">
                   {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
                 </h2>
-                {selectedChain === "marz-mainnet" && (
+                {selectedChain === "marz-neosphere" && (
                   <span className="px-2 py-1 rounded-full bg-gradient-to-r from-[#007F7F] to-[#00BFFF] text-xs font-orbitron">
-                    🚀 MARZ Network
+                    🚀 MARZ NeoSphere
                   </span>
                 )}
               </div>
               <p className="text-white/70 font-inter text-sm mb-2">
-                Type: {walletType === "smart" ? "Alchemy Smart Account on MARZ" : "WalletConnect / External"}
+                Type: {walletType === "smart" ? "Alchemy Smart Account on MARZ NeoSphere" : "WalletConnect / External"}
+              </p>
+              <p className="text-white/60 font-inter text-xs mb-2">
+                Chain ID: {selectedChain === "marz-neosphere" ? "1205614524712072" : "Other"}
               </p>
               {walletAddress && (
                 <p className="text-white/70 break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
@@ -147,7 +150,7 @@ export default function DashboardPage() {
         </div>
 
         {/* MARZ Network Warning for Smart Wallets */}
-        {walletType === "smart" && selectedChain !== "marz-mainnet" && (
+        {walletType === "smart" && selectedChain !== "marz-neosphere" && (
           <div className="p-4 rounded-xl bg-yellow-900/40 border border-yellow-500/50 text-yellow-100">
             <div className="flex items-start gap-3">
               <span className="text-2xl">⚠️</span>
@@ -156,13 +159,13 @@ export default function DashboardPage() {
                   Smart Wallet Network Warning
                 </h3>
                 <p className="text-xs text-yellow-200/80">
-                  Your Smart Wallet is deployed on MARZ Network. Switch to MARZ Network for optimal performance and to access your full wallet features.
+                  Your Smart Wallet is deployed on MARZ NeoSphere (Chain ID: 1205614524712072). Switch to MARZ NeoSphere for optimal performance and to access your full wallet features.
                 </p>
                 <button
-                  onClick={() => setSelectedChain("marz-mainnet")}
+                  onClick={() => setSelectedChain("marz-neosphere")}
                   className="mt-2 px-3 py-1 rounded bg-yellow-500 text-black text-xs font-semibold hover:bg-yellow-400 transition-colors"
                 >
-                  Switch to MARZ Network
+                  Switch to MARZ NeoSphere
                 </button>
               </div>
             </div>

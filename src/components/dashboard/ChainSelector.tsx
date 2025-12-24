@@ -2,12 +2,12 @@
 
 export function ChainSelector({ chain, setChain }: any) {
   const chains = [
-    { id: "marz-mainnet", label: "MARZ Network", emoji: "🚀" },
-    { id: "base-mainnet", label: "Base", emoji: "🔵" },
-    { id: "eth-mainnet", label: "Ethereum", emoji: "⟠" },
-    { id: "polygon-mainnet", label: "Polygon", emoji: "🟣" },
-    { id: "arbitrum-mainnet", label: "Arbitrum", emoji: "🔷" },
-    { id: "optimism-mainnet", label: "Optimism", emoji: "🔴" },
+    { id: "marz-neosphere", label: "MARZ NeoSphere", emoji: "🚀", chainId: 1205614524712072 },
+    { id: "base-mainnet", label: "Base", emoji: "🔵", chainId: 8453 },
+    { id: "eth-mainnet", label: "Ethereum", emoji: "⟠", chainId: 1 },
+    { id: "polygon-mainnet", label: "Polygon", emoji: "🟣", chainId: 137 },
+    { id: "arbitrum-mainnet", label: "Arbitrum", emoji: "🔷", chainId: 42161 },
+    { id: "optimism-mainnet", label: "Optimism", emoji: "🔴", chainId: 10 },
   ];
 
   return (
