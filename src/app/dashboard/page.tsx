@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getPortfolio, getNFTs, getActivity } from "./actions";
 import { getWalletState, clearWalletState, type WalletType } from "@/lib/wallet-state";
+import { SectionCard } from "@/components/dashboard/SectionCard";
+import { TokenCard } from "@/components/dashboard/TokenCard";
+import { NFTGrid } from "@/components/dashboard/NFTGrid";
+import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
+import { ChainSelector } from "@/components/dashboard/ChainSelector";
+import { TokenCardSkeleton, NFTSkeleton, ActivitySkeleton } from "@/components/dashboard/Skeleton";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -14,6 +20,7 @@ export default function DashboardPage() {
   const [nfts, setNfts] = useState<any>(null);
   const [activity, setActivity] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(false);
+  const [selectedChain, setSelectedChain] = useState("base-mainnet");
 
   useEffect(() => {
     // Check wallet connection using centralized state
@@ -35,9 +42,9 @@ export default function DashboardPage() {
     if (walletAddress && walletAddress !== "0x0000000000000000000000000000000000000000" && !dataLoading) {
       setDataLoading(true);
       Promise.all([
-        getPortfolio(walletAddress),
-        getNFTs(walletAddress),
-        getActivity(walletAddress),
+        getPortfolio(walletAddress, selectedChain),
+        getNFTs(walletAddress, selectedChain),
+        getActivity(walletAddress, selectedChain),
       ])
         .then(([portfolioData, nftsData, activityData]) => {
           setPortfolio(portfolioData);
@@ -51,7 +58,7 @@ export default function DashboardPage() {
           setDataLoading(false);
         });
     }
-  }, [walletAddress, dataLoading]);
+  }, [walletAddress, selectedChain, dataLoading]);
 
   if (isLoading || walletType === "none") {
     return (
@@ -90,18 +97,23 @@ export default function DashboardPage() {
 
         {/* Wallet Status */}
         <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white space-y-4">
-          <div>
-            <h2 className="font-orbitron text-xl mb-2">
-              {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
-            </h2>
-            <p className="text-white/70 font-inter text-sm mb-2">
-              Type: {walletType === "smart" ? "Alchemy Smart Account (Setup Required)" : "WalletConnect / External"}
-            </p>
-            {walletAddress && (
-              <p className="text-white/70 break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
-                {walletAddress}
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h2 className="font-orbitron text-xl mb-2">
+                {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
+              </h2>
+              <p className="text-white/70 font-inter text-sm mb-2">
+                Type: {walletType === "smart" ? "Alchemy Smart Account" : "WalletConnect / External"}
               </p>
-            )}
+              {walletAddress && (
+                <p className="text-white/70 break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
+                  {walletAddress}
+                </p>
+              )}
+            </div>
+            <div>
+              <ChainSelector chain={selectedChain} setChain={setSelectedChain} />
+            </div>
           </div>
           <div className="flex gap-3">
             {walletAddress && (
@@ -127,38 +139,59 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Coming Soon Section */}
-        <div className="grid grid-cols-1 gap-6">
-          <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
-            <h3 className="font-orbitron text-lg mb-4">Balances</h3>
+        {/* Dashboard Content */}
+        <div className="space-y-6">
+          {/* Token Balances */}
+          <SectionCard title="Token Balances">
             {dataLoading ? (
-              <p className="text-white/50 font-inter text-sm">Loading balances...</p>
-            ) : portfolio ? (
-              <pre className="text-white/70 text-sm overflow-x-auto">{JSON.stringify(portfolio, null, 2)}</pre>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <TokenCardSkeleton />
+                <TokenCardSkeleton />
+                <TokenCardSkeleton />
+                <TokenCardSkeleton />
+              </div>
+            ) : portfolio?.tokenBalances?.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {portfolio.tokenBalances.slice(0, 8).map((token: any, i: number) => (
+                  <TokenCard
+                    key={i}
+                    symbol={token.symbol || "Unknown"}
+                    balance={parseFloat(token.balance) / Math.pow(10, token.decimals || 18)}
+                    price={0}
+                  />
+                ))}
+              </div>
             ) : (
-              <p className="text-white/50 font-inter text-sm">No data available</p>
+              <div className="text-white/50 text-center py-8">No tokens found</div>
             )}
-          </div>
-          <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
-            <h3 className="font-orbitron text-lg mb-4">NFTs</h3>
+          </SectionCard>
+
+          {/* NFTs */}
+          <SectionCard title="NFT Collection">
             {dataLoading ? (
-              <p className="text-white/50 font-inter text-sm">Loading NFTs...</p>
-            ) : nfts ? (
-              <pre className="text-white/70 text-sm overflow-x-auto">{JSON.stringify(nfts, null, 2)}</pre>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <NFTSkeleton />
+                <NFTSkeleton />
+                <NFTSkeleton />
+                <NFTSkeleton />
+              </div>
             ) : (
-              <p className="text-white/50 font-inter text-sm">No data available</p>
+              <NFTGrid nfts={nfts} />
             )}
-          </div>
-          <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
-            <h3 className="font-orbitron text-lg mb-4">Activity</h3>
+          </SectionCard>
+
+          {/* Activity */}
+          <SectionCard title="Recent Activity">
             {dataLoading ? (
-              <p className="text-white/50 font-inter text-sm">Loading activity...</p>
-            ) : activity ? (
-              <pre className="text-white/70 text-sm overflow-x-auto">{JSON.stringify(activity, null, 2)}</pre>
+              <div className="space-y-3">
+                <ActivitySkeleton />
+                <ActivitySkeleton />
+                <ActivitySkeleton />
+              </div>
             ) : (
-              <p className="text-white/50 font-inter text-sm">No data available</p>
+              <ActivityTimeline activity={activity} />
             )}
-          </div>
+          </SectionCard>
         </div>
       </div>
     </main>
