@@ -5,10 +5,12 @@ export const marzChain = {
   network: "marz-neosphere",
   rpcUrls: {
     default: {
-      http: [process.env.NEXT_PUBLIC_MARZ_RPC_URL || "https://marz-neosphere.rpc.caldera.xyz/http"],
+      http: [process.env.NEXT_PUBLIC_MARZ_RPC_URL || "https://rpc.devnet.alchemy.com/0969bab5-2013-4458-a04b-61e5e39185dd"],
+      webSocket: [process.env.NEXT_PUBLIC_MARZ_WS_URL || "wss://ws.devnet.alchemy.com/0969bab5-2013-4458-a04b-61e5e39185dd"],
     },
     public: {
-      http: [process.env.NEXT_PUBLIC_MARZ_RPC_URL || "https://marz-neosphere.rpc.caldera.xyz/http"],
+      http: [process.env.NEXT_PUBLIC_MARZ_RPC_URL || "https://rpc.devnet.alchemy.com/0969bab5-2013-4458-a04b-61e5e39185dd"],
+      webSocket: [process.env.NEXT_PUBLIC_MARZ_WS_URL || "wss://ws.devnet.alchemy.com/0969bab5-2013-4458-a04b-61e5e39185dd"],
     },
   },
   nativeCurrency: {
@@ -19,7 +21,7 @@ export const marzChain = {
   blockExplorers: {
     default: {
       name: "MARZ Explorer",
-      url: "https://marz-neosphere.explorer.caldera.xyz",
+      url: "https://explorer-1205614524712072.devnet.alchemy.com/",
     },
   },
 } as const;
