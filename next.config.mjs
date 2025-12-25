@@ -1,5 +1,5 @@
 
-import { withMDX } from "@next/mdx";
+import withMDX from "@next/mdx";
 
 const experimental = {
   optimizePackageImports: ["lucide-react", "lodash-es"],
