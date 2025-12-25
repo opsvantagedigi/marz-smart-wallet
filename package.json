@@ -29,7 +29,7 @@
     "@account-kit/infra": "^4.82.0",
     "@account-kit/react": "^4.82.0",
     "@alchemy/aa-alchemy": "^3.7.3",
-    "@alchemy/aa-core": "^3.6.1",
+    "@alchemy/aa-core": "^3.7.3",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/orbitron": "^5.2.8",
     "@mdx-js/react": "^3.1.1",
