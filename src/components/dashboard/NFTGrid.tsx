@@ -2,14 +2,18 @@
 
 import { motion } from "framer-motion";
 
-export function NFTGrid({ nfts }: any) {
+interface NFTGridProps {
+  nfts: { ownedNfts: Array<{ title?: string; media?: Array<{ gateway?: string }>; contract?: { name?: string } }> } | null;
+}
+
+export function NFTGrid({ nfts }: NFTGridProps) {
   if (!nfts?.ownedNfts?.length) {
     return <div className="text-white/50 text-center py-8">No NFTs found</div>;
   }
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {nfts.ownedNfts.slice(0, 12).map((nft: any, i: number) => (
+      {nfts.ownedNfts.slice(0, 12).map((nft, i) => (
         <motion.div
           key={i}
           initial={{ opacity: 0, scale: 0.9 }}

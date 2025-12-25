@@ -2,14 +2,18 @@
 
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 
-export function ActivityTimeline({ activity }: any) {
+interface ActivityTimelineProps {
+  activity: { transfers: Array<{ from?: string; asset?: string; category?: string; value?: number; blockNum?: string; hash?: string }> } | null;
+}
+
+export function ActivityTimeline({ activity }: ActivityTimelineProps) {
   if (!activity?.transfers?.length) {
     return <div className="text-white/50 text-center py-8">No recent activity</div>;
   }
 
   return (
     <div className="space-y-3 max-h-96 overflow-y-auto">
-      {activity.transfers.slice(0, 20).map((tx: any, i: number) => {
+      {activity.transfers.slice(0, 20).map((tx, i) => {
         const isSent = tx.from?.toLowerCase() === activity.transfers[0]?.from?.toLowerCase();
         
         return (

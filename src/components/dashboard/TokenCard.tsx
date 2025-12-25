@@ -2,7 +2,13 @@
 
 import { motion } from "framer-motion";
 
-export function TokenCard({ symbol, balance, price }: any) {
+interface TokenCardProps {
+  symbol: string;
+  balance: number;
+  price: number;
+}
+
+export function TokenCard({ symbol, balance, price }: TokenCardProps) {
   const value = balance * price;
 
   return (

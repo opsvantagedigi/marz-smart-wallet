@@ -20,9 +20,11 @@ export default function DashboardPage() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [walletType, setWalletType] = useState<WalletType>("none");
   const [isLoading, setIsLoading] = useState(true);
-  const [portfolio, setPortfolio] = useState<any>(null);
-  const [nfts, setNfts] = useState<any>(null);
-  const [activity, setActivity] = useState<any>(null);
+  const [portfolio, setPortfolio] = useState<{
+    tokenBalances: Array<{ symbol: string; balance: string; decimals?: number }>;
+  } | null>(null);
+  const [nfts, setNfts] = useState<{ ownedNfts: Array<{ title?: string; media?: Array<{ gateway?: string }>; contract?: { name?: string } }> } | null>(null);
+  const [activity, setActivity] = useState<{ transfers: Array<{ from?: string; asset?: string; category?: string; value?: number; blockNum?: string; hash?: string }> } | null>(null);
   const [dataLoading, setDataLoading] = useState(false);
   const [selectedChain, setSelectedChain] = useState("marz-neosphere"); // Default to MARZ NeoSphere
 

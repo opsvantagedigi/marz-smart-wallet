@@ -1,6 +1,11 @@
 "use client";
 
-export function ChainSelector({ chain, setChain }: any) {
+interface ChainSelectorProps {
+  chain: string;
+  setChain: (chain: string) => void;
+}
+
+export function ChainSelector({ chain, setChain }: ChainSelectorProps) {
   const chains = [
     { id: "marz-neosphere", label: "MARZ NeoSphere", emoji: "🚀", chainId: 1205614524712072 },
     { id: "base-mainnet", label: "Base", emoji: "🔵", chainId: 8453 },
