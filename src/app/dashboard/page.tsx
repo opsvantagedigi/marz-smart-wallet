@@ -55,9 +55,32 @@ export default function DashboardPage() {
         getActivity(walletAddress, selectedChain),
       ])
         .then(([portfolioData, nftsData, activityData]) => {
-          setPortfolio(portfolioData);
+          setPortfolio(
+            portfolioData
+              ? {
+                  tokenBalances: Array.isArray(portfolioData.tokenBalances)
+                    ? portfolioData.tokenBalances
+                        .filter((t: any) => t && t.symbol && t.balance)
+                        .map((t: any) => ({
+                          symbol: t.symbol,
+                          balance: t.balance,
+                          decimals: t.decimals,
+                        }))
+                    : [],
+                }
+              : { tokenBalances: [] }
+          );
           setNfts(nftsData);
-          setActivity(activityData);
+          setActivity(
+            activityData
+              ? {
+                  transfers: activityData.transfers.map((t: any) => ({
+                    ...t,
+                    asset: t.asset === null ? undefined : t.asset,
+                  })),
+                }
+              : null
+          );
         })
         .catch((error) => {
           console.error("Error fetching wallet data:", error);
@@ -192,9 +215,9 @@ export default function DashboardPage() {
                   <TokenCardSkeleton />
                   <TokenCardSkeleton />
                 </div>
-              ) : portfolio?.tokenBalances?.length > 0 ? (
+              ) : (portfolio?.tokenBalances ?? []).length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {portfolio.tokenBalances.slice(0, 8).map((token: any, i: number) => (
+                  {(portfolio?.tokenBalances ?? []).slice(0, 8).map((token: any, i: number) => (
                     <TokenCard
                       key={i}
                       symbol={token.symbol || "Unknown"}
