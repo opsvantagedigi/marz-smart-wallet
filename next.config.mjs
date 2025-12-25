@@ -1,16 +1,15 @@
 
 import withMDX from "@next/mdx";
 
+
 const experimental = {
   optimizePackageImports: ["lucide-react", "lodash-es"],
-  turbo: false,
 };
 if (process.env.NEXT_ENABLE_URL_IMPORTS === "1") {
   experimental.urlImports = ["https://"];
 }
 
 const nextConfig = {
-  reactCompiler: true,
   reactStrictMode: true,
   compress: true,
   images: {
@@ -32,24 +31,38 @@ const nextConfig = {
   },
   experimental,
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
-  webpack: async (config, { isServer }) => {
-    // Dynamic import for webpack and terser-webpack-plugin
-    const webpackModule = await import("webpack");
-    const IgnorePlugin = webpackModule?.default?.IgnorePlugin || webpackModule.IgnorePlugin;
-    config.plugins.push(
-      new IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ })
-    );
+  webpack: (config, { isServer }) => {
+    // Use Next.js's internal webpack if available
+    let IgnorePlugin;
+    try {
+      // Try to use Next.js's compiled webpack
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      IgnorePlugin = require('next/dist/compiled/webpack/webpack-lib.js').IgnorePlugin;
+    } catch {
+      // Fallback to external webpack if not found
+      try {
+        IgnorePlugin = require('webpack').IgnorePlugin;
+      } catch {
+        IgnorePlugin = null;
+      }
+    }
+    if (IgnorePlugin) {
+      config.plugins.push(
+        new IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ })
+      );
+    }
     config.experiments = { ...(config.experiments || {}), topLevelAwait: true };
     if (!isServer) {
       config.optimization = config.optimization || {};
       try {
-        const terserModule = await import("terser-webpack-plugin");
-        const TerserPlugin = terserModule.default || terserModule;
+        // Use terser-webpack-plugin if available
+        const TerserPlugin = require('terser-webpack-plugin');
         config.optimization.minimizer = [new TerserPlugin({ terserOptions: { compress: { drop_console: true } } })];
       } catch {
         config.optimization.minimize = true;
       }
     }
+    // Do not override devtool in development
     return config;
   },
 };
