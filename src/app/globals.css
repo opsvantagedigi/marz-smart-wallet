@@ -1,9 +1,17 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap");
+
 /* force rebuild */
 :root {
   --force-rebuild: 1;
 }
-@import "@fontsource/inter";
-@import "@fontsource/orbitron";
+
+/* Glassmorphism utility */
+.glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
 
 @tailwind base;
 @tailwind components;
