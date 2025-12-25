@@ -9,6 +9,7 @@
     "lint": "eslint",
     "validate-env": "node scripts/validate-env.mjs",
     "vercel:deploy": "vercel --prod --confirm",
+    "postinstall": "node scripts/patch-alchemy.js",
     "alchemy": "node scripts/alchemy-cli.mjs",
     "alchemy:login": "node scripts/alchemy-cli.mjs login",
     "alchemy:logout": "node scripts/alchemy-cli.mjs logout",
