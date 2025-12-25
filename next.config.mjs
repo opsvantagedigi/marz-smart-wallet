@@ -1,6 +1,7 @@
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 import withMDX from "@next/mdx";
+import path from "path";
 
 
 const experimental = {
@@ -76,6 +77,15 @@ const nextConfig = {
         config.optimization.minimize = true;
       }
     }
+    // Map problematic Alchemy packages to internal shims so the bundler
+    // doesn't attempt to statically analyze incompatible ESM exports.
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      "@alchemy/aa-alchemy": path.resolve(__dirname, "src/shims/aa-alchemy.js"),
+      "@alchemy/aa-core": path.resolve(__dirname, "src/shims/aa-core.js"),
+    };
+
     // Do not override devtool in development
     return config;
   },

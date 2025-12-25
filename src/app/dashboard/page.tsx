@@ -37,7 +37,7 @@ export default function DashboardPage() {
 
     // Use functional update to merge state safely
     setWalletInfo((prev) => ({ ...prev, address, type: "external", isLoading: false }));
-  }, [address, type, router]);
+  }, [address, router]);
 
   useEffect(() => {
     // Fetch wallet data when address is available and valid
