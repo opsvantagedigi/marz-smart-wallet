@@ -15,16 +15,7 @@ const ENTRIES: SitemapEntry[] = [
   { path: "/rpc", lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
 ];
 
-function formatUrl(entry: SitemapEntry) {
-  return [
-    "<url>",
-    `  <loc>${new URL(entry.path, BASE_URL).toString()}</loc>`,
-    `  <lastmod>${entry.lastModified.toISOString()}</lastmod>`,
-    `  <changefreq>${entry.changeFrequency}</changefreq>`,
-    `  <priority>${entry.priority.toFixed(1)}</priority>`,
-    "</url>"
-  ].join("\n");
-}
+// helper removed: unused in current sitemap generation
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return ENTRIES.map(entry => ({

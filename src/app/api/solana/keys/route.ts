@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const userId = getUserId(req);
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { label } = await req.json();
-  const key = await createKey(userId, label);
+  await createKey(userId, label);
   const keys = await listKeys(userId);
   return NextResponse.json({ keys });
 }

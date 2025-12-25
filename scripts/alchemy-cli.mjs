@@ -6,6 +6,8 @@
  * and managing smart wallet operations.
  */
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Alchemy, Network, Utils } from "alchemy-sdk";
 import { createPublicClient, http, formatEther, parseEther } from "viem";
 import * as fs from "fs";

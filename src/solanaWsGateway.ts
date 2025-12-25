@@ -68,7 +68,7 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       if (client.readyState === client.OPEN) client.close();
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CLOSE", network, success: true, durationMs: 0 });
     });
-    upstream.on("error", (err: Error) => {
+    upstream.on("error", () => {
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_ERROR", network, success: false, durationMs: 0 });
       if (client.readyState === client.OPEN) client.close(1011, "Upstream error");
     });
@@ -92,10 +92,10 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       if (upstream.readyState === upstream.OPEN) upstream.close();
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CLOSE", network, success: true, durationMs: 0 });
     });
-    client.on("error", (err: Error) => {
+    client.on("error", () => {
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_ERROR", network, success: false, durationMs: 0 });
     });
-  } catch (err) {
+  } catch {
     client.close(1011, "Internal error");
   }
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AnalyticsSummary, SolanaAnalyticsPayload } from "@/lib/analyticsTypes";
+import { SolanaAnalyticsPayload } from "@/lib/analyticsTypes";
 
 interface SolanaKey {
   key: string;
@@ -38,7 +38,7 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
         })
       );
       setAnalytics(analyticsObj);
-    } catch (e) {
+    } catch {
       setError("Failed to load keys or analytics");
     } finally {
       setLoading(false);
@@ -56,7 +56,7 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
       });
       const data = await res.json();
       setKeys(data.keys || []);
-    } catch (e) {
+    } catch {
       setError("Failed to create key");
     } finally {
       setLoading(false);
@@ -129,7 +129,7 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
               <div className="text-xs font-mono bg-gray-100 rounded p-2 mb-1">HTTPS (devnet): https://api.marz-ops.solana.dev/v1/{k.key}</div>
               <div className="text-xs font-mono bg-gray-100 rounded p-2 mb-1">HTTPS (mainnet): https://api.marz-ops.solana.mainnet/v1/{k.key}</div>
 
-              (a as unknown as AnalyticsSummary)
+              {/* analytics placeholder */}
               <div className="mt-4">
                 <div className="font-semibold text-xs mb-1">WebSocket Streaming Endpoints</div>
                 <div className="text-xs font-mono bg-gray-100 rounded p-2 mb-1">Devnet: wss://api.marz-ops.solana.dev/v1/{k.key}?network=devnet</div>

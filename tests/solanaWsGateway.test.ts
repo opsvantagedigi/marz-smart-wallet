@@ -100,7 +100,7 @@ function triggerClientClose(): void {
 
 // --- PHASE 2: Test Cases ---
 describe("Solana WebSocket Gateway", () => {
-  let gateway;
+  // require the gateway module for side-effects in tests
   beforeEach(() => {
     jest.resetModules();
     wsServerHandlers = {};
@@ -115,7 +115,7 @@ describe("Solana WebSocket Gateway", () => {
     process.env.SOLANA_UPSTREAM_MAINNET_WS = "ws://mainnet";
     process.env.SOLANA_UPSTREAM_DEVNET_WS = "ws://devnet";
     process.env.SOLANA_WS_GATEWAY_PORT = "9999";
-    gateway = require("../src/solanaWsGateway.ts");
+    require("../src/solanaWsGateway.ts");
   });
 
   // --- TEST GROUP 1: CONNECTION VALIDATION ---

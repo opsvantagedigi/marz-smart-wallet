@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FC } from "react";
-import { Zap, Shield, Globe, Activity, Server, ArrowRight } from "lucide-react";
+import { Zap, Shield, Globe, Server, ArrowRight } from "lucide-react";
 import GlassCard from "@/components/GlassCard";
 import SectionHeader from "@/components/SectionHeader";
 import Reveal from "@/components/Reveal";

@@ -21,7 +21,7 @@ import Reveal from "@/components/Reveal";
    HERO SECTION
    ============================= */
 
-export const HeroSection: FC = () => (
+const HeroSection: FC = () => (
   <section className="relative overflow-hidden bg-marz-bg-dark text-marz-text-dark">
     <div className="absolute inset-0 bg-marz-gradient opacity-20 pointer-events-none" />
     <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-28 flex flex-col lg:flex-row items-center gap-12">
@@ -138,7 +138,7 @@ export const HeroSection: FC = () => (
    BENEFITS SECTION
    ============================= */
 
-export const BenefitsSection: FC = () => (
+const BenefitsSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20">
     <div className="max-w-6xl mx-auto px-6">
       <SectionHeader
@@ -194,7 +194,7 @@ export const BenefitsSection: FC = () => (
    FEATURES SECTION
    ============================= */
 
-export const FeaturesSection: FC = () => (
+const FeaturesSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20">
     <div className="max-w-6xl mx-auto px-6">
       <SectionHeader
@@ -271,7 +271,7 @@ export const FeaturesSection: FC = () => (
    HOW IT WORKS SECTION
    ============================= */
 
-export const HowItWorksSection: FC = () => (
+const HowItWorksSection: FC = () => (
   <section
     id="how-it-works"
     className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40"
@@ -324,7 +324,7 @@ export const HowItWorksSection: FC = () => (
    PRICING SECTION (PLACEHOLDER)
    ============================= */
 
-export const PricingSection: FC = () => (
+const PricingSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40">
     <div className="max-w-6xl mx-auto px-6">
       <SectionHeader
@@ -386,7 +386,7 @@ const FAQ_ITEMS = [
   },
 ];
 
-export const FAQSection: FC = () => {
+const FAQSection: FC = () => {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -430,7 +430,7 @@ export const FAQSection: FC = () => {
    COMPARISON SECTION (L1 vs Smart Wallets)
    ============================= */
 
-export const ComparisonSection: FC = () => (
+const ComparisonSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40">
     <div className="max-w-6xl mx-auto px-6">
       <SectionHeader
@@ -469,7 +469,7 @@ export const ComparisonSection: FC = () => (
    CTA SECTION
    ============================= */
 
-export const CTASection: FC = () => (
+const CTASection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40">
     <div className="max-w-4xl mx-auto px-6 text-center">
       <Reveal>

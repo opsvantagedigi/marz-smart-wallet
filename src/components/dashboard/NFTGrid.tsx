@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface NFTGridProps {
   nfts: { ownedNfts: Array<{ title?: string; media?: Array<{ gateway?: string }>; contract?: { name?: string } }> } | null;
@@ -22,7 +23,9 @@ export function NFTGrid({ nfts }: NFTGridProps) {
           className="rounded-xl overflow-hidden bg-white/10 border border-white/10 hover:border-white/30 transition-all cursor-pointer"
         >
           {nft.media?.[0]?.gateway ? (
-            <img src={nft.media[0].gateway} alt={nft.title} className="w-full h-40 object-cover" />
+            <div className="relative w-full h-40">
+              <Image src={nft.media[0].gateway} alt={nft.title || "NFT image"} fill className="object-cover" />
+            </div>
           ) : (
             <div className="w-full h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
               <span className="text-white/30 text-xs">No Image</span>

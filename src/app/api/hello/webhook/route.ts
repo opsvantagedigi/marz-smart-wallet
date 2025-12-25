@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Mock secret for Hello webhook signature
-const HELLO_WEBHOOK_SECRET = process.env.HELLO_WEBHOOK_SECRET || "test_secret";
+// NOTE: webhook secret placeholder (unused in this demo)
 
 // Helper: Validate Hello webhook signature (HMAC SHA256)
-function validateHelloSignature(req: NextRequest, body: string): boolean {
+function validateHelloSignature(req: NextRequest): boolean {
   const signature = req.headers.get("x-hello-signature");
   if (!signature) return false;
   // In real usage, use crypto.subtle or Node's crypto to verify HMAC
@@ -23,14 +22,14 @@ export async function POST(req: NextRequest) {
   const body = await req.text();
 
   // Validate signature
-  if (!validateHelloSignature(req, body)) {
+  if (!validateHelloSignature(req)) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
   let event: unknown;
   try {
     event = JSON.parse(body);
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 

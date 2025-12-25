@@ -17,7 +17,7 @@ const MOCK_USER = {
 };
 
 export default function SettingsPage() {
-  const [user, setUser] = useState(MOCK_USER);
+  const [user] = useState(MOCK_USER);
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [twoFA, setTwoFA] = useState(user.twoFA);

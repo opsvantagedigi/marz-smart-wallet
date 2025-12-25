@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     status = upstreamRes.status;
     data = await upstreamRes.json();
     success = upstreamRes.ok;
-  } catch (err) {
+  } catch {
     success = false;
     data = { error: "Upstream error" };
     status = 502;

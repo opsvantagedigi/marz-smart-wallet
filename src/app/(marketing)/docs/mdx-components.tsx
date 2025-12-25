@@ -1,6 +1,6 @@
 import React from "react";
 
-type HProps<T extends keyof JSX.IntrinsicElements> = React.ComponentPropsWithoutRef<T>;
+type HProps<T extends keyof React.JSX.IntrinsicElements> = React.ComponentPropsWithoutRef<T>;
 
 export const mdxComponents = {
   h1: (props: HProps<'h1'>) => (
