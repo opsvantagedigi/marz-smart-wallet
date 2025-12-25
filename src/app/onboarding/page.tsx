@@ -24,9 +24,9 @@ export default function OnboardingPage() {
       const address = accounts[0];
       setWalletState("external", address);
       window.location.href = "/dashboard";
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("WalletConnect error:", err);
-      setError(err?.message || "Failed to connect wallet. Please try again.");
+      setError(err instanceof Error ? err.message : String(err ?? "Failed to connect wallet. Please try again."));
     } finally {
       setIsConnecting(false);
     }
@@ -39,7 +39,7 @@ export default function OnboardingPage() {
       // We'll set a placeholder address that dashboard will replace
       setWalletState("smart", "0x0000000000000000000000000000000000000000");
       window.location.href = "/dashboard";
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Smart Wallet error:", err);
       setError("Failed to initialize Smart Wallet. Please try again.");
     }

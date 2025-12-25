@@ -13,7 +13,7 @@ export const createMarzSmartWallet = async () => {
     chain: {
       id: Number(process.env.NEXT_PUBLIC_MARZ_CHAIN_ID),
       rpcUrl: process.env.NEXT_PUBLIC_MARZ_RPC_URL!,
-    } as any,
+    } as unknown,
     signer,
     gasManagerConfig: {
       policyId: process.env.NEXT_PUBLIC_ALCHEMY_POLICY_ID!,

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     cache: "no-store",
   });
 
-  let json: any;
+  let json: unknown;
   try {
     json = await res.json();
   } catch {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json(json, {
+  return NextResponse.json(json as unknown, {
     status: res.ok ? 200 : res.status || 502,
     headers: { "cache-control": "no-store" },
   });

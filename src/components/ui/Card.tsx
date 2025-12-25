@@ -9,7 +9,7 @@ export default function Card({
   className = "",
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { variant?: CardVariant }) {
-  let base =
+  const base =
     "rounded-2xl p-6 w-full " + theme.typography.fontFamily.body +
     " transition-all ";
   let styles = "";

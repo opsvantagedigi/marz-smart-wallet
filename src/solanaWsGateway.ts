@@ -25,7 +25,7 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       client.close(4001, "Invalid API key");
       return;
     }
-    const tierConfig = getTierConfig(keyObj.tier as any);
+    const tierConfig = getTierConfig(keyObj.tier);
     if (tierConfig.monthlyWsMessageLimit === 0) {
       client.close(4003, "WebSocket not available on your tier");
       return;

@@ -27,14 +27,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  let event: any;
+  let event: unknown;
   try {
     event = JSON.parse(body);
   } catch (e) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { type, data } = event;
+  if (typeof event !== "object" || event === null) {
+    return NextResponse.json({ error: "Invalid event shape" }, { status: 400 });
+  }
+
+  const ev = event as Record<string, unknown>;
+  const type = typeof ev.type === "string" ? ev.type : undefined;
+  const data = ev.data as Record<string, unknown> | undefined;
   if (!type || !data) {
     return NextResponse.json({ error: "Missing event type or data" }, { status: 400 });
   }
@@ -42,23 +48,23 @@ export async function POST(req: NextRequest) {
   // Handle events
   switch (type) {
     case "subscription.created": {
-      await updateUserBillingStatus(data.userId, "active");
+      if (typeof data.userId === "string") await updateUserBillingStatus(data.userId, "active");
       break;
     }
     case "subscription.updated": {
-      await updateUserBillingStatus(data.userId, data.status || "active");
+      if (typeof data.userId === "string") await updateUserBillingStatus(data.userId, (typeof data.status === "string" ? data.status : "active"));
       break;
     }
     case "subscription.canceled": {
-      await updateUserBillingStatus(data.userId, "canceled");
+      if (typeof data.userId === "string") await updateUserBillingStatus(data.userId, "canceled");
       break;
     }
     case "invoice.paid": {
-      await updateUserBillingStatus(data.userId, "paid");
+      if (typeof data.userId === "string") await updateUserBillingStatus(data.userId, "paid");
       break;
     }
     case "invoice.payment_failed": {
-      await updateUserBillingStatus(data.userId, "payment_failed");
+      if (typeof data.userId === "string") await updateUserBillingStatus(data.userId, "payment_failed");
       break;
     }
     default:

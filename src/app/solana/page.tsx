@@ -144,8 +144,8 @@ const SolanaUsage: FC = () => (
         subtitle="Simple keys, clear limits, and a story for every request."
       />
       <Reveal>
-        <GlassCard className="mt-8 p-5 font-mono text-xs md:text-sm text-slate-100 bg-black/60">
-          <p className="mb-2 text-slate-400">// Example: using MARZ Solana RPC</p>
+          <GlassCard className="mt-8 p-5 font-mono text-xs md:text-sm text-slate-100 bg-black/60">
+          <p className="mb-2 text-slate-400">{'// Example: using MARZ Solana RPC'}</p>
           <pre className="whitespace-pre-wrap">
 {`const connection = new Connection(
   process.env.NEXT_PUBLIC_MARZ_SOLANA_RPC!,

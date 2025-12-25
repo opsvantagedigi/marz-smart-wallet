@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (!keyObj) return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
 
   // Rate limiting based on tier config + analytics counters
-  const tier = keyObj.tier as any;
+  const tier = keyObj.tier;
   const tierConfig = getTierConfig(tier);
   const usage = getUsageForKey(apiKey);
   const used = usage?.httpRequests ?? 0;
@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
   const upstream = NETWORKS[network];
   if (!upstream) return NextResponse.json({ error: "Invalid network" }, { status: 400 });
 
-  const body = await req.json();
-  const { method } = body;
+  const body = (await req.json()) as Record<string, unknown>;
+  const method = typeof body.method === "string" ? (body.method as string) : "unknown";
 
   // Log usage
   console.log("Solana RPC usage", {

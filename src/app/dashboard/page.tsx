@@ -17,9 +17,7 @@ import { SolanaRpcPanel } from "@/components/dashboard/SolanaRpcPanel";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [walletType, setWalletType] = useState<WalletType>("none");
-  const [isLoading, setIsLoading] = useState(true);
+  const [walletInfo, setWalletInfo] = useState<{ address: string | null; type: WalletType; isLoading: boolean }>({ address: null, type: "none", isLoading: true });
   const [portfolio, setPortfolio] = useState<{
     tokenBalances: Array<{ symbol: string; balance: string; decimals?: number }>;
   } | null>(null);
@@ -38,34 +36,46 @@ export default function DashboardPage() {
       return;
     }
 
-    setWalletType(type);
-    setWalletAddress(address);
-    setIsLoading(false);
+    // Defer state update to avoid synchronous setState calls within effect
+    Promise.resolve().then(() => setWalletInfo({ address, type, isLoading: false }));
     // If you want to avoid cascading renders, you could use a single state object for wallet info
     // or use React's batch updates (which is default in event handlers and effects in React 18+)
   }, [router]);
 
   useEffect(() => {
     // Fetch wallet data when address is available and valid
-    if (walletAddress && walletAddress !== "0x0000000000000000000000000000000000000000" && !dataLoading) {
-      setDataLoading(true);
-      Promise.all([
-        getPortfolio(walletAddress, selectedChain),
-        getNFTs(walletAddress, selectedChain),
-        getActivity(walletAddress, selectedChain),
-      ])
-        .then(([portfolioData, nftsData, activityData]) => {
+    if (walletInfo.address && walletInfo.address !== "0x0000000000000000000000000000000000000000" && !dataLoading) {
+      let cancelled = false;
+      async function fetchData() {
+        setDataLoading(true);
+        try {
+          const [portfolioData, nftsData, activityData] = await Promise.all([
+            getPortfolio(walletInfo.address!, selectedChain),
+            getNFTs(walletInfo.address!, selectedChain),
+            getActivity(walletInfo.address!, selectedChain),
+          ]);
+
+          // map portfolioData safely
           setPortfolio(
             portfolioData
               ? {
                   tokenBalances: Array.isArray(portfolioData.tokenBalances)
                     ? portfolioData.tokenBalances
-                        .filter((t: any) => t && t.symbol && t.balance)
-                        .map((t: any) => ({
-                          symbol: t.symbol,
-                          balance: t.balance,
-                          decimals: t.decimals,
-                        }))
+                        .filter((t: unknown) => {
+                          if (!t || typeof t !== "object") return false;
+                          const obj = t as Record<string, unknown>;
+                          const symbol = obj.symbol ?? (obj.tokenMetadata && (obj.tokenMetadata as Record<string, unknown>).symbol);
+                          const balance = obj.balance ?? obj.tokenBalance;
+                          return typeof symbol === "string" && typeof balance === "string";
+                        })
+                        .map((t: unknown) => {
+                          const obj = t as Record<string, unknown>;
+                          const metadata = (obj.tokenMetadata ?? {}) as Record<string, unknown>;
+                          const symbol = (obj.symbol as string) ?? (metadata.symbol as string) ?? (obj.contractAddress as string) ?? "Unknown";
+                          const balance = (obj.balance as string) ?? (obj.tokenBalance as string) ?? "0";
+                          const decimals = typeof obj.decimals === "number" ? obj.decimals : (typeof metadata.decimals === "number" ? (metadata.decimals as number) : undefined);
+                          return { symbol, balance, decimals };
+                        })
                     : [],
                 }
               : { tokenBalances: [] }
@@ -74,24 +84,38 @@ export default function DashboardPage() {
           setActivity(
             activityData
               ? {
-                  transfers: activityData.transfers.map((t: any) => ({
-                    ...t,
-                    asset: t.asset === null ? undefined : t.asset,
-                  })),
+                  transfers: Array.isArray(activityData.transfers)
+                    ? activityData.transfers.map((t: unknown) => {
+                        const obj = (t as Record<string, unknown>) ?? {};
+                        const asset = obj.asset === null ? undefined : (typeof obj.asset === "string" ? (obj.asset as string) : undefined);
+                        return {
+                          from: typeof obj.from === "string" ? (obj.from as string) : undefined,
+                          asset,
+                          category: typeof obj.category === "string" ? (obj.category as string) : undefined,
+                          value: typeof obj.value === "number" ? (obj.value as number) : undefined,
+                          blockNum: typeof obj.blockNum === "string" ? (obj.blockNum as string) : undefined,
+                          hash: typeof obj.hash === "string" ? (obj.hash as string) : undefined,
+                        };
+                      })
+                    : [],
                 }
               : null
           );
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Error fetching wallet data:", error);
-        })
-        .finally(() => {
-          setDataLoading(false);
-        });
-    }
-  }, [walletAddress, selectedChain, dataLoading]);
+        } finally {
+          if (!cancelled) setDataLoading(false);
+        }
+      }
 
-  if (isLoading || walletType === "none") {
+      void fetchData();
+      return () => {
+        cancelled = true;
+      };
+    }
+  }, [walletInfo.address, selectedChain, dataLoading]);
+
+  if (walletInfo.isLoading || walletInfo.type === "none") {
     return (
       <main className="min-h-screen py-20 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
@@ -132,7 +156,7 @@ export default function DashboardPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <h2 className="font-orbitron text-xl">
-                  {walletType === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
+                  {walletInfo.type === "smart" ? "Smart Wallet Connected" : "External Wallet Connected"}
                 </h2>
                 {selectedChain === "marz-neosphere" && (
                   <span className="px-2 py-1 rounded-full bg-gradient-to-r from-[#007F7F] to-[#00BFFF] text-xs font-orbitron">
@@ -141,14 +165,14 @@ export default function DashboardPage() {
                 )}
               </div>
               <p className="text-white/70 font-inter text-sm mb-2">
-                Type: {walletType === "smart" ? "Alchemy Smart Account on MARZ NeoSphere" : "WalletConnect / External"}
+                Type: {walletInfo.type === "smart" ? "Alchemy Smart Account on MARZ NeoSphere" : "WalletConnect / External"}
               </p>
               <p className="text-white/60 font-inter text-xs mb-2">
                 Chain ID: {selectedChain === "marz-neosphere" ? "1205614524712072" : "Other"}
               </p>
-              {walletAddress && (
+              {walletInfo.address && (
                 <p className="text-white/70 break-all text-xs font-mono bg-black/40 p-3 rounded border border-white/5">
-                  {walletAddress}
+                  {walletInfo.address}
                 </p>
               )}
             </div>
@@ -157,11 +181,11 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex gap-3">
-            {walletAddress && (
+            {walletInfo.address && (
               <button
                 className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] text-black font-orbitron text-sm hover:scale-105 transition-all"
                 onClick={() => {
-                  navigator.clipboard.writeText(walletAddress);
+                  navigator.clipboard.writeText(walletInfo.address ?? "");
                   alert("Address copied!");
                 }}
               >
@@ -181,7 +205,7 @@ export default function DashboardPage() {
         </div>
 
         {/* MARZ Network Warning for Smart Wallets */}
-        {walletType === "smart" && selectedChain !== "marz-neosphere" && (
+        {walletInfo.type === "smart" && selectedChain !== "marz-neosphere" && (
           <div className="p-4 rounded-xl bg-yellow-900/40 border border-yellow-500/50 text-yellow-100">
             <div className="flex items-start gap-3">
               <span className="text-2xl">⚠️</span>
@@ -217,7 +241,7 @@ export default function DashboardPage() {
                 </div>
               ) : (portfolio?.tokenBalances ?? []).length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {(portfolio?.tokenBalances ?? []).slice(0, 8).map((token: any, i: number) => (
+                  {(portfolio?.tokenBalances ?? []).slice(0, 8).map((token: { symbol: string; balance: string; decimals?: number }, i: number) => (
                     <TokenCard
                       key={i}
                       symbol={token.symbol || "Unknown"}
@@ -259,7 +283,7 @@ export default function DashboardPage() {
             </SectionCard>
           </div>
           <div className="md:col-span-1">
-            {walletAddress && <SolanaRpcPanel userId={walletAddress} />}
+            {walletInfo.address && <SolanaRpcPanel userId={walletInfo.address} />}
           </div>
         </div>
       </div>

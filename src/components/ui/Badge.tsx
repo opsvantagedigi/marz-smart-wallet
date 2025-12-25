@@ -9,7 +9,7 @@ export default function Badge({
   className = "",
   ...props
 }: React.HTMLAttributes<HTMLSpanElement> & { variant?: BadgeVariant }) {
-  let base =
+  const base =
     "inline-block px-3 py-1 rounded-full text-xs font-bold " + theme.typography.fontFamily.body;
   let styles = "";
   if (variant === "success") {

@@ -16,7 +16,7 @@ export async function getSmartWalletClient() {
 
   return createModularAccountAlchemyClient({
     apiKey,
-    chain: marzChain as any, // Use MARZ NeoSphere OP Stack chain
+    chain: marzChain as unknown, // Use MARZ NeoSphere OP Stack chain
     signer,
     gasManagerConfig: {
       policyId,

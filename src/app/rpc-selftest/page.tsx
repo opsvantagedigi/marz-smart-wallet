@@ -23,8 +23,8 @@ export default function RpcSelfTestPage() {
         const baseHex = await rpc<string>("eth_blockNumber", [], "base-mainnet");
         setEthBlock(hexToInt(ethHex));
         setBaseBlock(hexToInt(baseHex));
-      } catch (e: any) {
-        setErr(e?.message ?? "Unknown error");
+      } catch (e: unknown) {
+        setErr(e instanceof Error ? e.message : String(e ?? "Unknown error"));
       }
     })();
   }, []);

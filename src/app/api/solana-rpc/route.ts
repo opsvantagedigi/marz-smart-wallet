@@ -18,8 +18,12 @@ export async function POST(req: NextRequest) {
   if (!apiKey) return new NextResponse(JSON.stringify({error:"Missing API key"}),{status:401, headers:{ "Content-Type":"application/json"}});
   const upstream = process.env.SOLANA_RPC_UPSTREAM;
   if (!upstream) return new NextResponse(JSON.stringify({error:"Upstream not configured"}),{status:500, headers:{ "Content-Type":"application/json"}});
-  let payload:any;
-  try{ payload = await req.json(); } catch { return new NextResponse(JSON.stringify({error:"Invalid JSON body"}),{status:400, headers:{ "Content-Type":"application/json"}}); }
+  let payload: unknown;
+  try {
+    payload = await req.json();
+  } catch {
+    return new NextResponse(JSON.stringify({ error: "Invalid JSON body" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  }
   try{
     const upstreamRes = await fetch(upstream, { method:"POST", headers: { "Content-Type":"application/json","x-marz-api-key":apiKey }, body: JSON.stringify(payload), cache:"no-store" });
     const bodyText = await upstreamRes.text();

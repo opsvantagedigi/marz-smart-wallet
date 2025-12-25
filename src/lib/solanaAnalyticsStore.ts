@@ -121,7 +121,7 @@ export function buildUsageBundle(key: string, tierConfig: SolanaTierConfig): Usa
  * - `keyRecord` is the key object from the key store (used for future fields)
  * - `summary` is optional; if omitted we compute it from logs
  */
-export function buildAnalyticsPayload(key: string, tier: SolanaTier, keyRecord: any, summary?: AnalyticsSummary): SolanaAnalyticsPayload {
+export function buildAnalyticsPayload(key: string, tier: SolanaTier, keyRecord: unknown, summary?: AnalyticsSummary): SolanaAnalyticsPayload {
   const tierConfig = SOLANA_TIER_CONFIG[tier] as SolanaTierConfig;
   const s = summary ?? getSummaryForKey(key);
   const usage = buildUsageBundle(key, tierConfig);

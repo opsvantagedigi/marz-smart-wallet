@@ -1,4 +1,5 @@
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 import withMDX from "@next/mdx";
 
 
@@ -36,7 +37,6 @@ const nextConfig = {
     let IgnorePlugin;
     try {
       // Try to use Next.js's compiled webpack
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       IgnorePlugin = require('next/dist/compiled/webpack/webpack-lib.js').IgnorePlugin;
     } catch {
       // Fallback to external webpack if not found

@@ -9,7 +9,7 @@ export default function Button({
   className = "",
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }) {
-  let base =
+  const base =
     "px-6 py-3 rounded-xl font-bold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 " +
     theme.typography.fontFamily.heading;
   let styles = "";

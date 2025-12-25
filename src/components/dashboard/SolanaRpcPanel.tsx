@@ -122,7 +122,7 @@ export function SolanaRpcPanel({ userId }: { userId: string }) {
               <div className="w-full bg-gray-200 h-2 rounded-full mb-2 overflow-hidden">
                 <div className="h-2 bg-green-500" style={{ width: `${Math.min(100, Math.round(httpPercent * 100))}%` }} />
               </div>
-              {httpPercent > 0.8 && <div className="text-xs text-yellow-700 mb-2">You're nearing your plan limit. Consider upgrading.</div>}
+              {httpPercent > 0.8 && <div className="text-xs text-yellow-700 mb-2">You&apos;re nearing your plan limit. Consider upgrading.</div>}
               <div className="text-xs mb-2">Reset date: <span className="font-mono">{new Date(k.resetAt).toLocaleString()}</span></div>
               <div className="text-xs font-mono break-all mb-2">{k.key}</div>
               <div className="text-xs text-gray-700 mb-1">Example endpoints:</div>

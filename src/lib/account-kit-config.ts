@@ -39,7 +39,7 @@ const uiConfig: AlchemyAccountsUIConfig = {
 export const config = createConfig(
   {
     transport: alchemy({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
-    chain: marzChain as any, // Use MARZ NeoSphere OP Stack chain
+    chain: marzChain as unknown, // Use MARZ NeoSphere OP Stack chain
     ssr: false, // IMPORTANT: disable SSR for the onboarding page to avoid hydration issues
     enablePopupOauth: true,
   },
