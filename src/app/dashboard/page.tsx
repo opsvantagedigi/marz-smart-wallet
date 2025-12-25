@@ -41,6 +41,8 @@ export default function DashboardPage() {
     setWalletType(type);
     setWalletAddress(address);
     setIsLoading(false);
+    // If you want to avoid cascading renders, you could use a single state object for wallet info
+    // or use React's batch updates (which is default in event handlers and effects in React 18+)
   }, [router]);
 
   useEffect(() => {
