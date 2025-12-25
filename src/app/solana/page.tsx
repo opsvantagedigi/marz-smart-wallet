@@ -1,7 +1,22 @@
+
+"use client";
+import { useState, useEffect } from "react";
+
+function FooterWithYear() {
+  const [year, setYear] = useState(2025);
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+  return (
+    <footer className="py-8 text-center text-white/80 font-inter">
+      © {year} MARZ NeoSphere — Solana RPC Infrastructure
+    </footer>
+  );
+}
+
 export default function SolanaLandingPage() {
   return (
     <div className="min-h-screen bg-marz-gradient text-white flex flex-col">
-
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center py-24 px-6">
         <h1 className="text-5xl md:text-7xl font-orbitron font-bold animate-slide-up">
@@ -52,9 +67,7 @@ export default function SolanaLandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-white/80 font-inter">
-        © {new Date().getFullYear()} MARZ NeoSphere — Solana RPC Infrastructure
-      </footer>
+      <FooterWithYear />
     </div>
   );
 }
