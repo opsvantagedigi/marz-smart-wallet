@@ -32,6 +32,20 @@ const nextConfig = {
   },
   experimental,
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+  async rewrites() {
+    return [
+      {
+        source: "/",
+        has: [
+          {
+            type: "host",
+            value: "solana.opsvantagedigital.online",
+          },
+        ],
+        destination: "/solana",
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     // Use Next.js's internal webpack if available
     let IgnorePlugin;
