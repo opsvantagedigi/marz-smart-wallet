@@ -24,4 +24,4 @@ export const marzChain = {
       url: "https://explorer-1205614524712072.devnet.alchemy.com/",
     },
   },
-} as const;
+};

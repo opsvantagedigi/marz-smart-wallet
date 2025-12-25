@@ -3,6 +3,7 @@
 import { createModularAccountAlchemyClient } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
 import { marzChain } from "./chains";
+import type { Chain } from "viem";
 
 export async function getSmartWalletClient() {
   const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!;
@@ -16,7 +17,7 @@ export async function getSmartWalletClient() {
 
   return createModularAccountAlchemyClient({
     apiKey,
-    chain: marzChain as unknown, // Use MARZ NeoSphere OP Stack chain
+    chain: marzChain as unknown as Chain, // Use MARZ NeoSphere OP Stack chain
     signer,
     gasManagerConfig: {
       policyId,
