@@ -1,0 +1,12 @@
+{
+  "title": "Welcome to MARZ",
+  "hero": {
+    "heading": "Smart Wallets + MARZ NeoSphere",
+    "subheading": "Account abstraction, gas sponsorship, and human-centered UX."
+  },
+  "features": [
+    { "title": "Gasless UX", "description": "Transactions sponsored for end-users." },
+    { "title": "Smart Recovery", "description": "Guardians and social recovery flows." },
+    { "title": "Fast RPC", "description": "Low-latency MARZ NeoSphere endpoints." }
+  ]
+}

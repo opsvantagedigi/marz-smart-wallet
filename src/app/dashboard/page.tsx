@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useWallet } from "@/context/WalletContext";
 import { getPortfolio, getNFTs, getActivity } from "./actions";
 import { getWalletState, clearWalletState, type WalletType } from "@/lib/wallet-state";
 import { SectionCard } from "@/components/dashboard/SectionCard";
@@ -17,6 +18,7 @@ import { SolanaRpcPanel } from "@/components/dashboard/SolanaRpcPanel";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { address, type, isLoading: walletLoading, isInitialized } = useWallet();
   const [walletInfo, setWalletInfo] = useState<{ address: string | null; type: WalletType; isLoading: boolean }>({ address: null, type: "none", isLoading: true });
   const [portfolio, setPortfolio] = useState<{
     tokenBalances: Array<{ symbol: string; balance: string; decimals?: number }>;
@@ -27,20 +29,18 @@ export default function DashboardPage() {
   const [selectedChain, setSelectedChain] = useState("marz-neosphere"); // Default to MARZ NeoSphere
 
   useEffect(() => {
-    // Check wallet connection using centralized state
-    const { type, address } = getWalletState();
+    // Wait for wallet context initialization before making redirect decisions
+    if (!isInitialized) return;
 
+    // If there's no wallet after initialization, redirect to onboarding
     if (type === "none" || !address) {
-      // No wallet connected, redirect to onboarding
       router.replace("/onboarding");
       return;
     }
 
-    // Defer state update to avoid synchronous setState calls within effect
-    Promise.resolve().then(() => setWalletInfo({ address, type, isLoading: false }));
-    // If you want to avoid cascading renders, you could use a single state object for wallet info
-    // or use React's batch updates (which is default in event handlers and effects in React 18+)
-  }, [router]);
+    // Use functional update to merge state safely
+    setWalletInfo((prev) => ({ ...prev, address, type, isLoading: false }));
+  }, [address, type, router]);
 
   useEffect(() => {
     // Fetch wallet data when address is available and valid
@@ -115,7 +115,7 @@ export default function DashboardPage() {
     }
   }, [walletInfo.address, selectedChain, dataLoading]);
 
-  if (walletInfo.isLoading || walletInfo.type === "none") {
+  if (!isInitialized || walletInfo.isLoading || walletInfo.type === "none" || walletLoading) {
     return (
       <main className="min-h-screen py-20 px-4">
         <div className="max-w-6xl mx-auto space-y-8">

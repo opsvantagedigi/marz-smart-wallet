@@ -1,41 +1,17 @@
 "use client";
-import React, { useState } from "react";
-import { connectWalletConnect } from "../lib/marzWalletConnect";
-import { createMarzSmartWallet } from "../lib/marzSmartWallet";
+import React from "react";
+import { useWallet } from "@/context/WalletContext";
 import { Wallet, Zap, ArrowLeftRight, Download } from "lucide-react";
 
 export default function WalletConnectPanel() {
-  const [status, setStatus] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { connectExternal, createSmartWallet, isLoading, error } = useWallet();
 
   const handleSmartWallet = async () => {
-    setIsLoading(true);
-    setStatus("Creating Smart Wallet...");
-    try {
-      const wallet = await createMarzSmartWallet();
-      setStatus("Smart Wallet Ready ✓");
-      console.log(wallet);
-    } catch (error) {
-      setStatus("Failed to create wallet");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    await createSmartWallet();
   };
 
   const handleWalletConnect = async () => {
-    setIsLoading(true);
-    setStatus("Opening WalletConnect...");
-    try {
-      const provider = await connectWalletConnect();
-      setStatus("Wallet Connected ✓");
-      console.log(provider);
-    } catch (error) {
-      setStatus("Connection failed");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    await connectExternal();
   };
 
   return (
@@ -86,10 +62,10 @@ export default function WalletConnectPanel() {
             </div>
           </button>
 
-          {status && (
+          {(error || isLoading) && (
             <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
               <p className="text-sm text-slate-700 font-medium text-center">
-                {status}
+                {isLoading ? "Processing…" : error}
               </p>
             </div>
           )}

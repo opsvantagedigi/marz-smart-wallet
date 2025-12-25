@@ -22,5 +22,19 @@ export const createMarzSmartWallet = async () => {
     },
   });
 
-  return client;
+  // Try to derive an address from the signer if available
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const anySigner: any = signer;
+  let address: string | null = null;
+  try {
+    if (typeof anySigner.getAddress === "function") {
+      address = await anySigner.getAddress();
+    } else if (anySigner.address) {
+      address = anySigner.address as string;
+    }
+  } catch (err) {
+    // ignore
+  }
+
+  return { client, address };
 };

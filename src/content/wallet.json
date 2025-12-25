@@ -1,0 +1,10 @@
+{
+  "title": "Smart Wallet",
+  "steps": [
+    "Connect",
+    "Create Wallet",
+    "Configure Guardians",
+    "Dashboard"
+  ],
+  "notes": "This content file drives onboarding copy and step labels."
+}

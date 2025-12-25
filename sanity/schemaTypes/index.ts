@@ -1,5 +1,4 @@
-import { type SchemaTypeDefinition } from 'sanity'
-
-export const schema: { types: SchemaTypeDefinition[] } = {
+// Neutralized schemaTypes — Sanity schemas removed.
+export const schema = {
   types: [],
 }

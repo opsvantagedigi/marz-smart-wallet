@@ -127,12 +127,12 @@ const HeroSection: FC = () => (
                 <span className="text-slate-100 font-medium">3 of 5 active</span>
               </GlassCard>
             </div>
-          </div>
+          </GlassCard>
         </div>
       </Reveal>
-    </div>
-  </section>
-);
+      </div>
+    </section>
+  );
 
 /* =============================
    BENEFITS SECTION
