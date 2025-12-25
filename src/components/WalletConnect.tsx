@@ -6,18 +6,29 @@ import { Wallet, Zap, ArrowLeftRight, Download } from "lucide-react";
 
 export default function WalletConnectPanel() {
   const ctx = useWallet() as any;
+  const [isLoading, setIsLoading] = React.useState(false);
   const { connect, disconnect, status, error } = ctx ?? {};
 
   const handleSmartWallet = async () => {
-    if (typeof ctx.createSmartWallet === "function") {
-      await ctx.createSmartWallet();
-    } else {
-      await createMarzSmartWallet();
+    setIsLoading(true);
+    try {
+      if (typeof ctx.createSmartWallet === "function") {
+        await ctx.createSmartWallet();
+      } else {
+        await createMarzSmartWallet();
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleWalletConnect = async () => {
-    if (typeof connect === "function") await connect();
+    setIsLoading(true);
+    try {
+      if (typeof connect === "function") await connect();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
