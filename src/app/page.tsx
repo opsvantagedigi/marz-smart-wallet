@@ -22,9 +22,9 @@ import Reveal from "@/components/Reveal";
    ============================= */
 
 const HeroSection: FC = () => (
-  <section className="relative overflow-hidden bg-marz-bg-dark text-marz-text-dark">
+  <section className="w-full relative overflow-hidden bg-marz-bg-dark text-marz-text-dark">
     <div className="absolute inset-0 bg-marz-gradient opacity-20 pointer-events-none" />
-    <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-28 flex flex-col lg:flex-row items-center gap-12">
+    <div className="relative w-full max-w-7xl mx-auto px-6 py-20 flex flex-col lg:flex-row items-center gap-12">
       <div className="flex-1 space-y-6">
         <Reveal>
           <p className="uppercase tracking-[0.3em] text-xs text-marz-green font-orbitron">
@@ -81,7 +81,7 @@ const HeroSection: FC = () => (
 
       <Reveal className="flex-1 flex justify-center" delay={0.1}>
         <div className="relative w-full max-w-md">
-          <div className="glass rounded-3xl p-6 bg-marz-bg-dark/80 shadow-2xl border border-glass-border animate-fade-in">
+          <GlassCard className="rounded-3xl p-6 animate-fade-in w-full">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Wallet className="w-5 h-5 text-marz-green" />
@@ -140,7 +140,7 @@ const HeroSection: FC = () => (
 
 const BenefitsSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20">
-    <div className="max-w-6xl mx-auto px-6">
+    <div className="w-full max-w-7xl mx-auto px-6">
       <SectionHeader
         title="Safety, sovereignty, and story in one wallet"
         subtitle="Not just keys and balances — MARZ Smart Wallets encode how you want to be remembered."
@@ -196,7 +196,7 @@ const BenefitsSection: FC = () => (
 
 const FeaturesSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20">
-    <div className="max-w-6xl mx-auto px-6">
+    <div className="w-full max-w-7xl mx-auto px-6">
       <SectionHeader
         title="What your Smart Wallet can actually do"
         subtitle="From batching and automation to guardian flows — built for real use, not just demos."
@@ -274,9 +274,9 @@ const FeaturesSection: FC = () => (
 const HowItWorksSection: FC = () => (
   <section
     id="how-it-works"
-    className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40"
+    className="w-full bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40"
   >
-    <div className="max-w-6xl mx-auto px-6">
+    <div className="w-full max-w-7xl mx-auto px-6">
       <SectionHeader
         title="How a MARZ Smart Wallet comes alive"
         subtitle="Each step is a small ritual — intentional, reversible, and documented."
@@ -326,7 +326,7 @@ const HowItWorksSection: FC = () => (
 
 const PricingSection: FC = () => (
   <section className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40">
-    <div className="max-w-6xl mx-auto px-6">
+    <div className="w-full max-w-7xl mx-auto px-6">
       <SectionHeader
         title="Founder‑friendly, ritual‑aware pricing"
         subtitle="Start with experiments, grow into rituals, and scale into ecosystems."
@@ -391,7 +391,7 @@ const FAQSection: FC = () => {
 
   return (
     <section className="bg-marz-bg-dark py-16 md:py-20 border-t border-glass-border/40">
-      <div className="max-w-4xl mx-auto px-6">
+        <div className="w-full max-w-4xl mx-auto px-6">
         <SectionHeader
           title="Questions guardians would actually ask"
           subtitle="We treat every concern as a design requirement, not a blocker."

@@ -14,9 +14,9 @@ export default function SectionHeader({
 				align === "center" ? "text-center" : "text-left"
 			}`}
 		>
-			<h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">{title}</h2>
+			<h2 className="text-3xl sm:text-4xl lg:text-5xl font-orbitron text-white font-bold mb-3">{title}</h2>
 			{subtitle && (
-				<p className="text-sm sm:text-base text-white/70 dark:text-white/70 max-w-2xl mx-auto">
+				<p className={`text-sm sm:text-base text-white/70 max-w-2xl ${align === 'center' ? 'mx-auto' : ''} font-inter`}>
 					{subtitle}
 				</p>
 			)}
