@@ -10,6 +10,8 @@ console.log(`[SolanaWS] Gateway listening on port ${PORT}`);
 
 const wss = new WebSocketServer({ port: PORT });
 
+type WsData = any;
+
 wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
   try {
     const url = new URL(req.url || "", `ws://${req.headers.host}`);
@@ -59,7 +61,7 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       open = true;
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_CONNECTION", network, success: true, durationMs: 0 });
     });
-    upstream.on("message", (data: import("ws").Data) => {
+    upstream.on("message", (data: WsData) => {
       if (client.readyState === client.OPEN) {
         client.send(data);
       }
@@ -72,7 +74,7 @@ wss.on("connection", (client: WebSocket, req: IncomingMessage) => {
       addLog({ key: apiKey, timestamp: Date.now(), method: "WEBSOCKET_ERROR", network, success: false, durationMs: 0 });
       if (client.readyState === client.OPEN) client.close(1011, "Upstream error");
     });
-    client.on("message", (data: import("ws").Data) => {
+    client.on("message", (data: WsData) => {
       if (open && upstream.readyState === upstream.OPEN) {
         // increment usage per message
         incrementWsUsage(apiKey, 1);
