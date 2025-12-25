@@ -8,8 +8,8 @@ export async function getSmartWalletClient() {
   // at build time. Use dynamic import at runtime only when API keys are present.
   if (process.env.NEXT_PUBLIC_ALCHEMY_API_KEY) {
     try {
-      const aaAlchemy = await import("@alchemy/aa-alchemy");
-      const aaCore = await import("@alchemy/aa-core");
+      const aaAlchemy: any = await import("@alchemy/aa-alchemy");
+      const aaCore: any = await import("@alchemy/aa-core");
 
       // Support multiple export shapes across versions
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
