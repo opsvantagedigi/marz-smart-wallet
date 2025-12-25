@@ -10,8 +10,8 @@ export const createMarzSmartWallet = async () => {
     try {
       // Dynamic imports avoid static resolution during build.
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const aaAlchemy = await import("@alchemy/aa-alchemy");
-      const aaCore = await import("@alchemy/aa-core");
+      const aaAlchemy: any = await import("@alchemy/aa-alchemy");
+      const aaCore: any = await import("@alchemy/aa-core");
 
       // Attempt to create a signer and client similar to previous implementation.
       // Guard all operations in try/catch to avoid bubbling runtime errors to the build.
