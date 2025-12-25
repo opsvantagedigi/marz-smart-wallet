@@ -1,3 +1,4 @@
+import "./globals.css";
 import React from "react";
 import DocsSidebar from "./sidebar/DocsSidebar";
 import "./docs.css";

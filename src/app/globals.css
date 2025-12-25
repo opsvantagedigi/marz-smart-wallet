@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap");
 
@@ -13,19 +16,14 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Base layout + typography */
 html,
 body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  /* Restore clean neutral background and readable text color */
   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-  color: #0f172a; /* text-slate-900 */
+  color: #0f172a;
 }
 
 /* Responsive font size */
@@ -60,7 +58,7 @@ h4 {
   @apply transition-colors duration-200;
 }
 
-/* Fade-in animation for Reveal component */
+/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
