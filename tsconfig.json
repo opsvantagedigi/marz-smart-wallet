@@ -38,9 +38,9 @@
   ],
   "exclude": [
     "node_modules",
-    "src/components/glasscard.tsx",
-    "src/components/reveal.tsx",
-    "src/components/sectionheader.tsx",
-    "src/components/themeprovider.tsx"
+    "src/components/GlassCard.tsx",
+    "src/components/Reveal.tsx",
+    "src/components/SectionHeader.tsx",
+    "src/components/ThemeProvider.tsx"
   ]
 }
