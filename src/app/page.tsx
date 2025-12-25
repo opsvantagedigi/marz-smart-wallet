@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, FC } from "react";
+import { useRouter } from "next/navigation";
+import { useWallet } from "@/context/WalletContext";
 import Link from "next/link";
 import {
   Zap,
@@ -49,13 +51,7 @@ const HeroSection: FC = () => (
 
         <Reveal delay={0.15}>
           <div className="flex flex-wrap gap-4 pt-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 rounded-xl bg-marz-green text-marz-blue px-5 py-3 font-inter font-semibold hover:bg-marz-yellow transition-colors"
-            >
-              Launch Smart Wallet Console
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <LaunchButton />
             <Link
               href="#how-it-works"
               className="inline-flex items-center gap-2 rounded-xl border border-glass-border bg-glass-dark px-5 py-3 font-inter text-slate-100 hover:bg-glass-light transition-colors glass"
@@ -520,5 +516,29 @@ export default function Home() {
       <ComparisonSection />
       <CTASection />
     </div>
+  );
+}
+
+function LaunchButton() {
+  const router = useRouter();
+  const { status, connect } = useWallet();
+
+  const handleLaunchClick = async () => {
+    if (status === "connected") {
+      router.push("/dashboard");
+    } else {
+      await connect();
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleLaunchClick}
+      className="inline-flex items-center gap-2 rounded-xl bg-marz-green text-marz-blue px-5 py-3 font-inter font-semibold hover:bg-marz-yellow transition-colors"
+    >
+      Launch Smart Wallet Console
+      <ArrowRight className="w-4 h-4" />
+    </button>
   );
 }

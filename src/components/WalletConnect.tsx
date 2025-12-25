@@ -1,17 +1,23 @@
 "use client";
 import React from "react";
 import { useWallet } from "@/context/WalletContext";
+import { createMarzSmartWallet } from "@/lib/marzSmartWallet";
 import { Wallet, Zap, ArrowLeftRight, Download } from "lucide-react";
 
 export default function WalletConnectPanel() {
-  const { connectExternal, createSmartWallet, isLoading, error } = useWallet();
+  const ctx = useWallet() as any;
+  const { connect, disconnect, status, error } = ctx ?? {};
 
   const handleSmartWallet = async () => {
-    await createSmartWallet();
+    if (typeof ctx.createSmartWallet === "function") {
+      await ctx.createSmartWallet();
+    } else {
+      await createMarzSmartWallet();
+    }
   };
 
   const handleWalletConnect = async () => {
-    await connectExternal();
+    if (typeof connect === "function") await connect();
   };
 
   return (

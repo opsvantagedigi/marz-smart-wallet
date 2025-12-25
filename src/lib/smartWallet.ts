@@ -24,3 +24,23 @@ export async function getSmartWalletClient() {
     },
   });
 }
+
+export interface SmartWalletInfo {
+  address: string;
+  guardians: number;
+  requiredGuardians: number;
+  chain: "neosphere" | string;
+  hasGasAbstraction: boolean;
+}
+
+export function getSmartWallet(ownerAddress: string): SmartWalletInfo | null {
+  if (!ownerAddress) return null;
+
+  return {
+    address: ownerAddress,
+    guardians: 3,
+    requiredGuardians: 2,
+    chain: "neosphere",
+    hasGasAbstraction: true,
+  };
+}

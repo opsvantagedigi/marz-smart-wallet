@@ -4,11 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useWallet } from "@/context/WalletContext";
+import { createMarzSmartWallet } from "@/lib/marzSmartWallet";
 import { Wallet, Mail, ArrowRight, UserPlus, Shield } from "lucide-react";
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { connectExternal, createSmartWallet, isLoading, error: ctxError } = useWallet();
+  const ctx = useWallet() as any;
+  const { connect, createSmartWallet, status, error: ctxError } = ctx ?? {};
   const [step, setStep] = useState(0);
   const [isWorking, setIsWorking] = useState(false);
   const [guardians, setGuardians] = useState<string[]>([]);
@@ -20,7 +22,9 @@ export default function OnboardingPage() {
     setIsWorking(true);
     setLocalError(null);
     try {
-      await connectExternal(false); // don't auto-navigate — control steps here
+      if (typeof connect === "function") {
+        await connect();
+      }
       setStep(1);
     } catch (err: unknown) {
       setLocalError(err instanceof Error ? err.message : String(err ?? "Failed to connect"));
@@ -33,7 +37,11 @@ export default function OnboardingPage() {
     setIsWorking(true);
     setLocalError(null);
     try {
-      await createSmartWallet(false);
+      if (typeof createSmartWallet === "function") {
+        await createSmartWallet();
+      } else {
+        await createMarzSmartWallet();
+      }
       setStep(2);
     } catch (err: unknown) {
       setLocalError(err instanceof Error ? err.message : String(err ?? "Failed to create wallet"));

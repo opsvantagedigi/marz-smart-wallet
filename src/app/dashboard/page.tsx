@@ -18,7 +18,7 @@ import { SolanaRpcPanel } from "@/components/dashboard/SolanaRpcPanel";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { address, type, isLoading: walletLoading, isInitialized } = useWallet();
+  const { address, status, disconnect } = useWallet();
   const [walletInfo, setWalletInfo] = useState<{ address: string | null; type: WalletType; isLoading: boolean }>({ address: null, type: "none", isLoading: true });
   const [portfolio, setPortfolio] = useState<{
     tokenBalances: Array<{ symbol: string; balance: string; decimals?: number }>;
@@ -29,17 +29,14 @@ export default function DashboardPage() {
   const [selectedChain, setSelectedChain] = useState("marz-neosphere"); // Default to MARZ NeoSphere
 
   useEffect(() => {
-    // Wait for wallet context initialization before making redirect decisions
-    if (!isInitialized) return;
-
-    // If there's no wallet after initialization, redirect to onboarding
-    if (type === "none" || !address) {
+    // If there's no wallet, redirect to onboarding
+    if (!address) {
       router.replace("/onboarding");
       return;
     }
 
     // Use functional update to merge state safely
-    setWalletInfo((prev) => ({ ...prev, address, type, isLoading: false }));
+    setWalletInfo((prev) => ({ ...prev, address, type: "external", isLoading: false }));
   }, [address, type, router]);
 
   useEffect(() => {
@@ -115,7 +112,7 @@ export default function DashboardPage() {
     }
   }, [walletInfo.address, selectedChain, dataLoading]);
 
-  if (!isInitialized || walletInfo.isLoading || walletInfo.type === "none" || walletLoading) {
+  if (status === "connecting" || walletInfo.isLoading || !address) {
     return (
       <main className="min-h-screen py-20 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
@@ -123,9 +120,7 @@ export default function DashboardPage() {
             <h1 className="font-orbitron text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#007F7F] via-[#00BFFF] to-[#FFD700] bg-clip-text text-transparent mb-4">
               MARZ Dashboard
             </h1>
-            <p className="font-inter text-white/70 text-lg">
-              Your Smart Wallet Command Center
-            </p>
+            <p className="font-inter text-white/70 text-lg">Your Smart Wallet Command Center</p>
           </div>
 
           <div className="p-6 rounded-xl bg-black/40 border border-white/10 text-white">
@@ -195,8 +190,7 @@ export default function DashboardPage() {
             <button
               className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 text-white font-inter text-sm transition-all"
               onClick={() => {
-                clearWalletState();
-                router.push("/onboarding");
+                disconnect();
               }}
             >
               Disconnect
